@@ -19,12 +19,19 @@ public class Address implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
+    @Column(name = "address_id", nullable = false, unique = true, updatable = false,  insertable = false)
     private Integer id;
+
     @NotNull
+    @Column(nullable = false)
     private String city;
+
     @NotNull
+    @Column(nullable = false)
     private String street;
+
     @NotNull
+    @Column(nullable = false)
     private Integer number;
 
     @Override

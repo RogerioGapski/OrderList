@@ -20,10 +20,15 @@ public class OrderItem implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
+    @Column(name = "items_id", nullable = false, unique = true, updatable = false,  insertable = false)
     private Integer id;
+
     @NotNull
+    @Column(name = "products_quantity", nullable = false)
     private Integer quantity;
+
     @NotNull
+    @Column(nullable = false)
     private Double unitary_price;
 
     @Override

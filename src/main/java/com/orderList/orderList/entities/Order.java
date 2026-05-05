@@ -22,12 +22,19 @@ public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
+    @Column(name = "order_id", nullable = false, unique = true, updatable = false,  insertable = false)
     private Integer id;
+
     @NotNull
+    @Column(nullable = false)
     private Date date;
+
     @NotNull
+    @Column(nullable = false)
     private OrderStatus status;
+
     @NotNull
+    @Column(nullable = false)
     private Double total;
 
     @Override

@@ -19,11 +19,15 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
+    @Column(name = "user_id", nullable = false, unique = true,  updatable = false,  insertable = false)
     private Integer id;
+
     @NotNull
+    @Column(name = "user_name", nullable = false)
     private String name;
+
     @NotNull
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Override

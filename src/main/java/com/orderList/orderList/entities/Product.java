@@ -19,12 +19,19 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
+    @Column(nullable = false, unique = true, insertable = false, updatable = false)
     private Integer id;
+
     @NotNull
+    @Column(name = "product_name", nullable = false)
     private String name;
+
     @NotNull
+    @Column(nullable = false)
     private Double price;
+
     @NotNull
+    @Column(nullable = false)
     private Integer stock;
 
     @Override
