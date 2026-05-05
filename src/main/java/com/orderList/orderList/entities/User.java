@@ -1,6 +1,7 @@
 package com.orderList.orderList.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -17,8 +18,12 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Integer id;
+    @NotNull
     private String name;
+    @NotNull
+    @Column(unique = true)
     private String email;
 
     @Override
