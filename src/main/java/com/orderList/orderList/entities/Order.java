@@ -24,6 +24,8 @@ public class Order implements Serializable {
     private OrderStatus status;
     private Double total;
 
+    private User user;
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
