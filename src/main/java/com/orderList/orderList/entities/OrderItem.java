@@ -31,6 +31,9 @@ public class OrderItem implements Serializable {
     @Column(nullable = false)
     private Double unitary_price;
 
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.REMOVE)
+    private Product product;
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

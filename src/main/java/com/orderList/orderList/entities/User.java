@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -29,6 +30,17 @@ public class User implements Serializable {
     @NotNull
     @Column(unique = true, nullable = false)
     private String email;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private Order order;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_address",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id")
+    )
+    private List<Address> addresses;
 
     @Override
     public boolean equals(Object o) {

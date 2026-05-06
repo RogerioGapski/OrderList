@@ -34,6 +34,9 @@ public class Address implements Serializable {
     @Column(nullable = false)
     private Integer number;
 
+    @ManyToMany(mappedBy = "address")
+    private User user;
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

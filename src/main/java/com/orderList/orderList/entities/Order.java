@@ -37,6 +37,10 @@ public class Order implements Serializable {
     @Column(nullable = false)
     private Double total;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
