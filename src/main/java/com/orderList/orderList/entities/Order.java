@@ -38,14 +38,16 @@ public class Order implements Serializable {
     @Column(nullable = false)
     private Double total;
 
+    @NotNull
+    @Column(nullable = false)
+    private Payments paymentType;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
-
-    private Payments paymentType;
 
     @Override
     public boolean equals(Object o) {
