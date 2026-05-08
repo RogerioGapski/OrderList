@@ -39,7 +39,7 @@ public class User implements Serializable {
     )
     private List<Address> addresses;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
     @Override

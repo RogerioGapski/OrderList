@@ -32,12 +32,12 @@ public class OrderItem implements Serializable {
     @Column(nullable = false)
     private Double unitary_price;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "product_id")
-    private Product product;
-
     @OneToMany(mappedBy = "orderItem", cascade = CascadeType.REMOVE)
     private List<Product> products;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     @Override
     public boolean equals(Object o) {
