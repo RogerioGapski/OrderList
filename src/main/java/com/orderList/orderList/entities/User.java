@@ -31,9 +31,6 @@ public class User implements Serializable {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private Order order;
-
     @ManyToMany
     @JoinTable(
             name = "user_address",
@@ -41,6 +38,9 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "address_id")
     )
     private List<Address> addresses;
+
+    @OneToMany(mappedBy = "users")
+    private List<Order> orders;
 
     @Override
     public boolean equals(Object o) {

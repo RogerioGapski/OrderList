@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -31,8 +32,12 @@ public class OrderItem implements Serializable {
     @Column(nullable = false)
     private Double unitary_price;
 
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "product_id")
     private Product product;
+
+    @OneToMany(mappedBy = "orderItem", cascade = CascadeType.REMOVE)
+    private List<Product> products;
 
     @Override
     public boolean equals(Object o) {

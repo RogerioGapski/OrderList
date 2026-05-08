@@ -19,7 +19,7 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
-    @Column(nullable = false, unique = true, insertable = false, updatable = false)
+    @Column(name = "product_id", nullable = false, unique = true, insertable = false, updatable = false)
     private Integer id;
 
     @NotNull
@@ -33,6 +33,10 @@ public class Product implements Serializable {
     @NotNull
     @Column(nullable = false)
     private Integer stock;
+
+    @ManyToOne
+    @JoinColumn(name = "items_id")
+    private OrderItem orderItem;
 
     @Override
     public boolean equals(Object o) {

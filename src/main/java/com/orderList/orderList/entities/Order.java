@@ -1,6 +1,7 @@
 package com.orderList.orderList.entities;
 
 import com.orderList.orderList.enums.OrderStatus;
+import com.orderList.orderList.enums.Payments;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -40,6 +41,11 @@ public class Order implements Serializable {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> orderItems;
+
+    private Payments paymentType;
 
     @Override
     public boolean equals(Object o) {

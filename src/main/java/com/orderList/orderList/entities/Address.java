@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -34,8 +35,8 @@ public class Address implements Serializable {
     @Column(nullable = false)
     private Integer number;
 
-    @ManyToMany(mappedBy = "address")
-    private User user;
+    @ManyToMany(mappedBy = "addresses")
+    private List<User> users;
 
     @Override
     public boolean equals(Object o) {
