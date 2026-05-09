@@ -1,6 +1,7 @@
-package com.orderList.orderList.entities;
+package com.orderList.orderList.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -23,11 +24,11 @@ public class Address implements Serializable {
     @Column(name = "address_id", nullable = false, unique = true, updatable = false,  insertable = false)
     private Integer id;
 
-    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private String city;
 
-    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private String street;
 

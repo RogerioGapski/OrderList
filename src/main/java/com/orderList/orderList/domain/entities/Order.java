@@ -1,12 +1,14 @@
-package com.orderList.orderList.entities;
+package com.orderList.orderList.domain.entities;
 
-import com.orderList.orderList.enums.OrderStatus;
-import com.orderList.orderList.enums.Payments;
+import com.orderList.orderList.domain.enums.OrderStatus;
+import com.orderList.orderList.domain.enums.Payments;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,8 +29,9 @@ public class Order implements Serializable {
     private Integer id;
 
     @NotNull
-    @Column(nullable = false)
-    private Date date;
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private Instant date;
 
     @NotNull
     @Column(nullable = false)

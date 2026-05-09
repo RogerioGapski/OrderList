@@ -1,4 +1,4 @@
-package com.orderList.orderList.entities;
+package com.orderList.orderList.domain.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
