@@ -31,12 +31,7 @@ public class User implements Serializable {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_address",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "address_id")
-    )
+    @OneToMany(mappedBy = "user")
     private List<Address> addresses;
 
     @OneToMany(mappedBy = "user")

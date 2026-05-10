@@ -36,7 +36,8 @@ public class Address implements Serializable {
     @Column(nullable = false)
     private Integer number;
 
-    @ManyToMany(mappedBy = "addresses")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private List<User> users;
 
     @Override
