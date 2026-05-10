@@ -7,10 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@NoArgsConstructor
-@Builder
-@ToString
-@Data
 public record CreateAddressDTO(
         @NotBlank String city,
         @NotBlank String street,
