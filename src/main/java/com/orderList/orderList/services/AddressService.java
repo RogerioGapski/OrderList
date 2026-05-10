@@ -28,11 +28,16 @@ public class AddressService {
         return addressMapper.toDTO(address);
     }
 
-    public Address updateAddress(CreateAddressDTO addressUpdate, Integer id) {
-        AddressDTO address = findAddressById(id);
+    public AddressDTO updateAddress(CreateAddressDTO addressUpdate, Integer id) {
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Address not found"));
 
+        address.setCity(addressUpdate.city());
+        address.setStreet(addressUpdate.street());
+        address.setNumber(addressUpdate.number());
 
-
+        addressRepository.save(address);
+        return addressMapper.toDTO(address);
     }
 
     public void deleteAddress(Integer id) {
