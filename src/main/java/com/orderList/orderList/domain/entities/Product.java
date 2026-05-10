@@ -1,6 +1,7 @@
 package com.orderList.orderList.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -22,7 +23,7 @@ public class Product implements Serializable {
     @Column(name = "product_id", nullable = false, unique = true, insertable = false, updatable = false)
     private Integer id;
 
-    @NotNull
+    @NotBlank
     @Column(name = "product_name", nullable = false)
     private String name;
 

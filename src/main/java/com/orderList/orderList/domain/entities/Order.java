@@ -3,6 +3,7 @@ package com.orderList.orderList.domain.entities;
 import com.orderList.orderList.domain.enums.OrderStatus;
 import com.orderList.orderList.domain.enums.Payments;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -33,7 +34,7 @@ public class Order implements Serializable {
     @Column(nullable = false, updatable = false)
     private Instant date;
 
-    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private OrderStatus status;
 
@@ -41,7 +42,7 @@ public class Order implements Serializable {
     @Column(nullable = false)
     private Double total;
 
-    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private Payments paymentType;
 
