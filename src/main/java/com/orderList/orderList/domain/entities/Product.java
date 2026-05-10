@@ -20,7 +20,7 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
-    @Column(name = "product_id", nullable = false, unique = true, insertable = false, updatable = false)
+    @Column(name = "product_id", nullable = false, unique = true, insertable = false)
     private Integer id;
 
     @NotBlank

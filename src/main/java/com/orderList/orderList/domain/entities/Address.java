@@ -21,7 +21,7 @@ public class Address implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
-    @Column(name = "address_id", nullable = false, unique = true, updatable = false,  insertable = false)
+    @Column(name = "address_id", nullable = false, unique = true, updatable = false)
     private Integer id;
 
     @NotBlank
@@ -38,7 +38,7 @@ public class Address implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private List<User> users;
+    private User users;
 
     @Override
     public boolean equals(Object o) {

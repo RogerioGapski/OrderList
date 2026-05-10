@@ -21,7 +21,7 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
-    @Column(name = "user_id", nullable = false, unique = true,  updatable = false,  insertable = false)
+    @Column(name = "user_id", nullable = false, unique = true,  updatable = false)
     private Integer id;
 
     @NotBlank
