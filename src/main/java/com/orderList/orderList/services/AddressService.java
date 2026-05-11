@@ -40,7 +40,7 @@ public class AddressService {
         return addressMapper.toDTO(address);
     }
 
-    public void deleteAddress(Integer id) {
+    public void deleteAddressById(Integer id) {
         Address deleteAddress = addressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
 

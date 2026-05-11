@@ -53,7 +53,7 @@ public class OrderItemService {
         return changeQuantity(orderItemId, productId, -quantity);
     }
 
-    public void deleteOrderItem(Integer orderItemId){
+    public void deleteOrderItemById(Integer orderItemId){
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
                 .orElseThrow(() -> new NotFoundException("OrderItem not found"));
 
