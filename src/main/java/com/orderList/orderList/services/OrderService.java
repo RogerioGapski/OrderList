@@ -3,7 +3,6 @@ package com.orderList.orderList.services;
 import com.orderList.orderList.domain.entities.Order;
 import com.orderList.orderList.domain.entities.OrderItem;
 import com.orderList.orderList.dto.request.CreateOrderDTO;
-import com.orderList.orderList.dto.request.CreateOrderItemDTO;
 import com.orderList.orderList.dto.response.OrderDTO;
 import com.orderList.orderList.exceptions.BadRequestException;
 import com.orderList.orderList.exceptions.NotFoundException;
