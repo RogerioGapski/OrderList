@@ -25,6 +25,20 @@ public class OrderService {
         return orderMapper.toDTO(order);
     }
 
+    public void deleteById(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found"));
+
+        orderRepository.delete(order);
+    }
+
+    public OrderDTO findById(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found"));
+
+        return orderMapper.toDTO(order);
+    }
+
     public void addOrderItem(Integer orderId, Integer orderItemId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
@@ -46,19 +60,5 @@ public class OrderService {
 
         orderItem.setOrder(null);
         orderItemRepository.save(orderItem);
-    }
-
-    public OrderDTO findOrderById(Integer orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order not found"));
-
-        return orderMapper.toDTO(order);
-    }
-
-    public void deleteOrderById(Integer orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order not found"));
-
-        orderRepository.delete(order);
     }
 }

@@ -28,6 +28,20 @@ public class AddressService {
         return addressMapper.toDTO(address);
     }
 
+    public void deleteById(Integer id) {
+        Address deleteAddress = addressRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Address not found"));
+
+        addressRepository.delete(deleteAddress);
+    }
+
+    public AddressDTO findById(Integer id) {
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Address not found"));
+
+        return addressMapper.toDTO(address);
+    }
+
     public AddressDTO updateAddress(CreateAddressDTO addressUpdate, Integer id) {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
@@ -37,20 +51,6 @@ public class AddressService {
         address.setNumber(addressUpdate.number());
 
         addressRepository.save(address);
-        return addressMapper.toDTO(address);
-    }
-
-    public void deleteAddressById(Integer id) {
-        Address deleteAddress = addressRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Address not found"));
-
-        addressRepository.delete(deleteAddress);
-    }
-
-    public AddressDTO findAddressById(Integer id) {
-        Address address = addressRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Address not found"));
-
         return addressMapper.toDTO(address);
     }
 }
