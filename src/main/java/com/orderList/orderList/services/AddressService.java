@@ -10,13 +10,12 @@ import com.orderList.orderList.repository.AddressRepository;
 import com.orderList.orderList.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AddressService {
+
     private final AddressRepository addressRepository;
     private final AddressMapper addressMapper;
     private final UserRepository userRepository;
