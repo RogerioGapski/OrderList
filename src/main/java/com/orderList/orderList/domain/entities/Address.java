@@ -22,7 +22,7 @@ public class Address implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     @Column(name = "address_id", nullable = false, unique = true, updatable = false)
-    private Integer id;
+    private Long id;
 
     @NotBlank
     @Column(nullable = false)

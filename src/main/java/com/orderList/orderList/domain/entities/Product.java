@@ -21,7 +21,7 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     @Column(name = "product_id", nullable = false, unique = true, insertable = false)
-    private Integer id;
+    private Long id;
 
     @NotBlank
     @Column(name = "product_name", nullable = false)
@@ -33,7 +33,7 @@ public class Product implements Serializable {
 
     @NotNull
     @Column(nullable = false)
-    private Integer stock;
+    private Long stock;
 
     @ManyToOne
     @JoinColumn(name = "items_id")

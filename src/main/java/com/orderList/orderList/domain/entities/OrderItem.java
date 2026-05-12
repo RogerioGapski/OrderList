@@ -22,7 +22,7 @@ public class OrderItem implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     @Column(name = "items_id", nullable = false, unique = true, updatable = false)
-    private Integer id;
+    private Long id;
 
     @NotNull
     @Column(name = "products_quantity", nullable = false)

@@ -21,14 +21,14 @@ public class ProductService {
         return productMapper.toDTO(product);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
 
         productRepository.delete(product);
     }
 
-    public ProductDTO findById(Integer id) {
+    public ProductDTO findById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
 

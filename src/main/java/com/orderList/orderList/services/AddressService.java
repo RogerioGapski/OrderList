@@ -11,6 +11,9 @@ import com.orderList.orderList.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AddressService {
@@ -18,7 +21,7 @@ public class AddressService {
     private final AddressMapper addressMapper;
     private final UserRepository userRepository;
 
-    public AddressDTO createAddress(CreateAddressDTO dto, Integer id) {
+    public AddressDTO createAddress(CreateAddressDTO dto, Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
@@ -28,21 +31,30 @@ public class AddressService {
         return addressMapper.toDTO(address);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         Address deleteAddress = addressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
 
         addressRepository.delete(deleteAddress);
     }
 
-    public AddressDTO findById(Integer id) {
+    public AddressDTO findById(Long id) {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
 
         return addressMapper.toDTO(address);
     }
 
-    public AddressDTO updateAddress(CreateAddressDTO addressUpdate, Integer id) {
+    public List<AddressDTO> getAddressesById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Not"));
+
+        return user.getAddresses().stream()
+                .map(addressMapper::toDTO)
+                .toList();
+    }
+
+    public AddressDTO updateAddress(CreateAddressDTO addressUpdate, Long id) {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
 

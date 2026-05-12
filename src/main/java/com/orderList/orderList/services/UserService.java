@@ -21,7 +21,7 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public void deleteById(Integer id){
+    public void deleteById(Long id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
@@ -35,7 +35,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public UserDTO findById(Integer id){
+    public UserDTO findById(Long id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
@@ -49,7 +49,7 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public UserDTO updateUser(Integer id, CreateUserDTO dto){
+    public UserDTO updateUser(Long id, CreateUserDTO dto){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
