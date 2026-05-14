@@ -1,6 +1,6 @@
 package com.orderList.orderList.repository;
 
-import com.orderList.orderList.domain.entities.OrderItem;
+import com.orderList.orderList.model.entities.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

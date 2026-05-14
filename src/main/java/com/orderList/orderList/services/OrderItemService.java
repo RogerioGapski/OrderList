@@ -1,12 +1,12 @@
 package com.orderList.orderList.services;
 
-import com.orderList.orderList.domain.entities.OrderItem;
-import com.orderList.orderList.domain.entities.Product;
-import com.orderList.orderList.dto.request.CreateOrderItemDTO;
-import com.orderList.orderList.dto.response.OrderItemDTO;
-import com.orderList.orderList.exceptions.BadRequestException;
-import com.orderList.orderList.exceptions.NotFoundException;
-import com.orderList.orderList.mapper.OrderItemMapper;
+import com.orderList.orderList.model.entities.OrderItem;
+import com.orderList.orderList.model.entities.Product;
+import com.orderList.orderList.model.dto.request.CreateOrderItemDTO;
+import com.orderList.orderList.model.dto.response.OrderItemDTO;
+import com.orderList.orderList.exceptions.customs.BadRequestException;
+import com.orderList.orderList.exceptions.customs.NotFoundException;
+import com.orderList.orderList.utils.mapper.OrderItemMapper;
 import com.orderList.orderList.repository.OrderItemRepository;
 import com.orderList.orderList.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;

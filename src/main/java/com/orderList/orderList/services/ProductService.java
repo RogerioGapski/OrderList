@@ -1,10 +1,10 @@
 package com.orderList.orderList.services;
 
-import com.orderList.orderList.domain.entities.Product;
-import com.orderList.orderList.dto.request.CreateProductDTO;
-import com.orderList.orderList.dto.response.ProductDTO;
-import com.orderList.orderList.exceptions.NotFoundException;
-import com.orderList.orderList.mapper.ProductMapper;
+import com.orderList.orderList.model.entities.Product;
+import com.orderList.orderList.model.dto.request.CreateProductDTO;
+import com.orderList.orderList.model.dto.response.ProductDTO;
+import com.orderList.orderList.exceptions.customs.NotFoundException;
+import com.orderList.orderList.utils.mapper.ProductMapper;
 import com.orderList.orderList.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

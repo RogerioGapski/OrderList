@@ -1,11 +1,11 @@
 package com.orderList.orderList.services;
 
-import com.orderList.orderList.domain.entities.Address;
-import com.orderList.orderList.domain.entities.User;
-import com.orderList.orderList.dto.request.CreateAddressDTO;
-import com.orderList.orderList.dto.response.AddressDTO;
-import com.orderList.orderList.exceptions.NotFoundException;
-import com.orderList.orderList.mapper.AddressMapper;
+import com.orderList.orderList.model.entities.Address;
+import com.orderList.orderList.model.entities.User;
+import com.orderList.orderList.model.dto.request.CreateAddressDTO;
+import com.orderList.orderList.model.dto.response.AddressDTO;
+import com.orderList.orderList.exceptions.customs.NotFoundException;
+import com.orderList.orderList.utils.mapper.AddressMapper;
 import com.orderList.orderList.repository.AddressRepository;
 import com.orderList.orderList.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class AddressService {
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         Address address = addressMapper.toEntity(dto);
-        address.setUsers(user);
+        address.setUser(user);
         addressRepository.save(address);
         return addressMapper.toDTO(address);
     }
