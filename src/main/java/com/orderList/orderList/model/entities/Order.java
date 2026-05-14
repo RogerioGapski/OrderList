@@ -25,24 +25,19 @@ public class Order implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Column(name = "order_id", nullable = false, unique = true, updatable = false)
     private Long id;
 
-    @NotNull
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private Instant date;
 
-    @NotBlank
     @Column(nullable = false)
     private OrderStatus status;
 
-    @NotNull
     @Column(nullable = false)
     private Double total;
 
-    @NotBlank
     @Column(nullable = false)
     private Payments paymentType;
 

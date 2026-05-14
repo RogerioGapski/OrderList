@@ -4,11 +4,12 @@ import com.orderList.orderList.model.enums.OrderStatus;
 import com.orderList.orderList.model.enums.Payments;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 public record OrderDTO(
             @NotNull Long id,
             @NotNull OrderStatus orderStatus,
-            @NotNull Double total,
+            @NotNull @PositiveOrZero Double total,
             @NotBlank Payments paymentType){
 }
 

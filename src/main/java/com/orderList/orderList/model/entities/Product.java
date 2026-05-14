@@ -20,20 +20,15 @@ public class Product implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Column(name = "product_id", nullable = false, unique = true, insertable = false)
     private Long id;
 
-    @NotBlank
     @Column(name = "product_name", nullable = false)
     private String name;
 
-    @NotNull
     @Column(name = "product_price", nullable = false)
     private Double price;
 
-    @NotNull
-    @PositiveOrZero
     @Column(nullable = false)
     private Long stock;
 

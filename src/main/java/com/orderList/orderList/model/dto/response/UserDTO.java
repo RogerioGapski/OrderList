@@ -7,6 +7,6 @@ import jakarta.validation.constraints.NotNull;
 public record UserDTO(
           @NotNull Long id,
           @NotBlank String name,
-          @Email String email){
+          @Email @NotBlank String email){
 }
 
