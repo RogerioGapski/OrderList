@@ -1,5 +1,7 @@
 package com.orderList.orderList.controllers;
 
+import com.orderList.orderList.model.dto.request.ChangeUserEmailDTO;
+import com.orderList.orderList.model.dto.request.ChangeUserNameDTO;
 import com.orderList.orderList.model.dto.request.CreateUserDTO;
 import com.orderList.orderList.model.dto.response.UserDTO;
 import com.orderList.orderList.services.UserService;
@@ -67,26 +69,18 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<UserDTO> updateName(
             @PathVariable Long id,
-            @RequestBody String name
+            @RequestBody ChangeUserNameDTO changeName
     ){
-        UserDTO dto = userService.changeName(id, name);
+        UserDTO dto = userService.changeName(id, changeName.name());
         return ResponseEntity.ok().body(dto);
     }
 
     @PatchMapping("/email/{email}")
     public ResponseEntity<UserDTO> updateEmail(
-        @PathVariable Long id,
-        @RequestBody String email
+        @PathVariable String email,
+        @RequestBody ChangeUserEmailDTO changeEmail
     ){
-        UserDTO dto = userService.changeEmail(id, email);
+        UserDTO dto = userService.changeEmail(email, changeEmail.email());
         return ResponseEntity.ok().body(dto);
     }
-
-
-
-
-
-
-
-
 }

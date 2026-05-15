@@ -47,7 +47,6 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    @Transactional
     public UserDTO findByEmail(String email){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -66,8 +65,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO changeEmail(Long id, String newEmail) {
-        User user = userRepository.findById(id)
+    public UserDTO changeEmail(String email, String newEmail) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         user.setEmail(newEmail);

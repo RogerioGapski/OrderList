@@ -50,7 +50,7 @@ public class AddressService {
 
     public List<AddressDTO> getAddressesById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Not"));
+                .orElseThrow(() -> new NotFoundException("Address not found"));
 
         return user.getAddresses().stream()
                 .map(addressMapper::toDTO)
