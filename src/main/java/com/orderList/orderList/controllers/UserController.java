@@ -6,10 +6,7 @@ import com.orderList.orderList.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -34,6 +31,59 @@ public class UserController {
 
         return ResponseEntity.created(uri).body(user);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(
+            @PathVariable Long id
+    ){
+        userService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/email/{email}")
+    public ResponseEntity<Void> deleteByEmail(
+            @PathVariable String email
+    ){
+        userService.deleteByEmail(email);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> findById(
+            @PathVariable Long id
+    ){
+        UserDTO dto = userService.findById(id);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDTO> findByEmail(
+            @PathVariable String email
+    ){
+        UserDTO dto = userService.findByEmail(email);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserDTO> updateName(
+            @PathVariable Long id,
+            @RequestBody String name
+    ){
+        UserDTO dto = userService.changeName(id, name);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PatchMapping("/email/{email}")
+    public ResponseEntity<UserDTO> updateEmail(
+        @PathVariable Long id,
+        @RequestBody String email
+    ){
+        UserDTO dto = userService.changeEmail(id, email);
+        return ResponseEntity.ok().body(dto);
+    }
+
+
+
 
 
 

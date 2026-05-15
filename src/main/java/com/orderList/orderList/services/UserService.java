@@ -8,6 +8,7 @@ import com.orderList.orderList.utils.mapper.UserMapper;
 import com.orderList.orderList.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,12 +17,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    @Transactional
     public UserDTO createUser(CreateUserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
         userRepository.save(user);
         return userMapper.toDTO(user);
     }
 
+    @Transactional
     public void deleteById(Long id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -29,6 +32,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    @Transactional
     public void deleteByEmail(String email){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -43,6 +47,7 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
+    @Transactional
     public UserDTO findByEmail(String email){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -50,6 +55,7 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
+    @Transactional
     public UserDTO changeName(Long id, String newName){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -59,7 +65,8 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public UserDTO changeEmail(Long id, String newEmail){
+    @Transactional
+    public UserDTO changeEmail(Long id, String newEmail) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
@@ -67,6 +74,4 @@ public class UserService {
         userRepository.save(user);
         return userMapper.toDTO(user);
     }
-
-
 }

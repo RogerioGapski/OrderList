@@ -11,6 +11,7 @@ import com.orderList.orderList.repository.OrderItemRepository;
 import com.orderList.orderList.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +21,14 @@ public class OrderItemService {
     private final OrderItemRepository orderItemRepository;
     private final OrderItemMapper orderItemMapper;
 
+    @Transactional
     public OrderItemDTO createOrderItem(CreateOrderItemDTO dto) {
         OrderItem orderItem = orderItemMapper.toEntity(dto);
         orderItemRepository.save(orderItem);
         return orderItemMapper.toDTO(orderItem);
     }
 
+    @Transactional
     public void deleteById(Long orderItemId){
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
                 .orElseThrow(() -> new NotFoundException("OrderItem not found"));
@@ -40,6 +43,7 @@ public class OrderItemService {
         return orderItemMapper.toDTO(orderItem);
     }
 
+    @Transactional
     public OrderItemDTO changeQuantity(Long orderItemId, Long productId, Integer quantity){
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
                 .orElseThrow(() -> new NotFoundException("Order item not found"));
@@ -60,10 +64,12 @@ public class OrderItemService {
         return orderItemMapper.toDTO(orderItem);
     }
 
+    @Transactional
     public OrderItemDTO increaseQuantity(Long orderItemId, Long productId, Integer quantity) {
         return changeQuantity(orderItemId, productId, quantity);
     }
 
+    @Transactional
     public OrderItemDTO decreaseQuantity(Long orderItemId, Long productId, Integer quantity){
         return changeQuantity(orderItemId, productId, -quantity);
     }

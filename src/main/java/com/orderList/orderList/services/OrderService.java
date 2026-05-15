@@ -11,6 +11,7 @@ import com.orderList.orderList.repository.OrderItemRepository;
 import com.orderList.orderList.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +21,14 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
 
+    @Transactional
     public OrderDTO createOrder(CreateOrderDTO dto) {
         Order order = orderMapper.toEntity(dto);
         orderRepository.save(order);
         return orderMapper.toDTO(order);
     }
 
+    @Transactional
     public void deleteById(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
@@ -40,6 +43,7 @@ public class OrderService {
         return orderMapper.toDTO(order);
     }
 
+    @Transactional
     public void addOrderItem(Long orderId, Long orderItemId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
@@ -51,6 +55,7 @@ public class OrderService {
         orderItemRepository.save(orderItem);
     }
 
+    @Transactional
     public void removeOrderItem(Long orderId, Long orderItemId) {
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
                 .orElseThrow(() -> new NotFoundException("Order item not found"));

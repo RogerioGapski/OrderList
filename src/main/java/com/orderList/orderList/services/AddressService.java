@@ -10,6 +10,8 @@ import com.orderList.orderList.repository.AddressRepository;
 import com.orderList.orderList.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -20,6 +22,7 @@ public class AddressService {
     private final AddressMapper addressMapper;
     private final UserRepository userRepository;
 
+    @Transactional
     public AddressDTO createAddress(CreateAddressDTO dto, Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -30,6 +33,7 @@ public class AddressService {
         return addressMapper.toDTO(address);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         Address deleteAddress = addressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
@@ -53,6 +57,7 @@ public class AddressService {
                 .toList();
     }
 
+    @Transactional
     public AddressDTO updateAddress(CreateAddressDTO addressUpdate, Long id) {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
