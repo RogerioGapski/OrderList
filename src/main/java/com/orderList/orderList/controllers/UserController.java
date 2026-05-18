@@ -69,7 +69,7 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<UserDTO> updateName(
             @PathVariable Long id,
-            @RequestBody ChangeUserNameDTO changeName
+            @RequestBody @Valid ChangeUserNameDTO changeName
     ){
         UserDTO dto = userService.changeName(id, changeName.name());
         return ResponseEntity.ok().body(dto);
@@ -78,7 +78,7 @@ public class UserController {
     @PatchMapping("/email/{email}")
     public ResponseEntity<UserDTO> updateEmail(
         @PathVariable String email,
-        @RequestBody ChangeUserEmailDTO changeEmail
+        @RequestBody @Valid ChangeUserEmailDTO changeEmail
     ){
         UserDTO dto = userService.changeEmail(email, changeEmail.email());
         return ResponseEntity.ok().body(dto);

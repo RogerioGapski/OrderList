@@ -48,7 +48,7 @@ public class AddressService {
         return addressMapper.toDTO(address);
     }
 
-    public List<AddressDTO> getAddressesById(Long id) {
+    public List<AddressDTO> getAddressesByUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
 
