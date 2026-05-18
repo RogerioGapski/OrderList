@@ -3,6 +3,8 @@ package com.orderList.orderList.model.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
@@ -29,7 +31,10 @@ public class Address implements Serializable {
     private String street;
 
     @Column(nullable = false)
-    private Integer number;
+    @Size(max = 8, message = "The house number should just 10 characters.")
+    @Pattern(
+            regexp = "^[0-9]+$", message = "The house number must have only 10 characters."
+    ) private String number;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
