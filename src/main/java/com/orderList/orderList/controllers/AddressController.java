@@ -1,6 +1,7 @@
 package com.orderList.orderList.controllers;
 
 import com.orderList.orderList.model.dto.request.CreateAddressDTO;
+import com.orderList.orderList.model.dto.request.UpdateAddressDTO;
 import com.orderList.orderList.model.dto.response.AddressDTO;
 import com.orderList.orderList.services.AddressService;
 import jakarta.validation.Valid;
@@ -21,8 +22,8 @@ public class AddressController {
 
     @PostMapping("/{userId}")
     public ResponseEntity<AddressDTO> createAddress(
-            @RequestBody @Valid CreateAddressDTO dto,
-            @PathVariable Long userId
+            @PathVariable Long userId,
+            @RequestBody @Valid CreateAddressDTO dto
     ){
         AddressDTO address = addressService.createAddress(dto, userId);
         URI uri = ServletUriComponentsBuilder
@@ -39,34 +40,31 @@ public class AddressController {
             @PathVariable Long userId,
             @PathVariable Long addressId
     ){
-        addressService.deleteById(addressId);
+        addressService.deleteById(userId, addressId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{addressId}")
+    @GetMapping("/{userId}/{addressId}")
     public ResponseEntity<AddressDTO> getById(
+            @PathVariable Long userId,
             @PathVariable Long addressId
     ){
-        return ResponseEntity.ok().body(addressService.findById(addressId));
+        return ResponseEntity.ok().body(addressService.findById(userId, addressId));
     }
 
-    @GetMapping("/addresses/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<AddressDTO>> getAddressesByUser(
             @PathVariable Long userId
     ){
         return ResponseEntity.ok().body(addressService.getAddressesByUser(userId));
     }
 
-    @PutMapping("/{addressId}")
+    @PutMapping("/{userId}/{addressId}")
     public ResponseEntity<AddressDTO> updateAddress(
+            @PathVariable Long userId,
             @PathVariable Long addressId,
-            @RequestBody @Valid CreateAddressDTO newAddress
+            @RequestBody @Valid UpdateAddressDTO newAddress
     ){
-        return ResponseEntity.ok().body(addressService.updateAddress(newAddress, addressId));
+        return ResponseEntity.ok().body(addressService.updateAddress(userId, newAddress, addressId));
     }
-
-
-
-
-
 }

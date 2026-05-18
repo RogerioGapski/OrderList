@@ -1,5 +1,7 @@
 package com.orderList.orderList.services;
 
+import com.orderList.orderList.exceptions.customs.UnauthorizedException;
+import com.orderList.orderList.model.dto.request.UpdateAddressDTO;
 import com.orderList.orderList.model.entities.Address;
 import com.orderList.orderList.model.entities.User;
 import com.orderList.orderList.model.dto.request.CreateAddressDTO;
@@ -23,8 +25,8 @@ public class AddressService {
     private final UserRepository userRepository;
 
     @Transactional
-    public AddressDTO createAddress(CreateAddressDTO dto, Long id) {
-        User user = userRepository.findById(id)
+    public AddressDTO createAddress(CreateAddressDTO dto, Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         Address address = addressMapper.toEntity(dto);
@@ -34,22 +36,36 @@ public class AddressService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        Address deleteAddress = addressRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Address not found"));
+    public void deleteById(Long userId, Long addressId) {
+        User user = userRepository.findById(userId)
+                        .orElseThrow(() -> new NotFoundException("User not found"));
 
-        addressRepository.delete(deleteAddress);
+        Address address = addressRepository.findById(addressId)
+                        .orElseThrow(() -> new NotFoundException("Address not found"));
+
+        if(!address.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedException("This address does not belong to the user.");
+        }
+
+        addressRepository.deleteById(addressId);
     }
 
-    public AddressDTO findById(Long id) {
-        Address address = addressRepository.findById(id)
+    public AddressDTO findById(Long userId, Long addressId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
+
+        if(!address.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedException("This address does not belong to the user.");
+        }
 
         return addressMapper.toDTO(address);
     }
 
-    public List<AddressDTO> getAddressesByUser(Long id) {
-        User user = userRepository.findById(id)
+    public List<AddressDTO> getAddressesByUser(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
 
         return user.getAddresses().stream()
@@ -58,9 +74,16 @@ public class AddressService {
     }
 
     @Transactional
-    public AddressDTO updateAddress(CreateAddressDTO addressUpdate, Long id) {
-        Address address = addressRepository.findById(id)
+    public AddressDTO updateAddress(Long userId, UpdateAddressDTO addressUpdate, Long addressId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
+
+        if(!address.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedException("This address does not belong to the user.");
+        }
 
         address.setCity(addressUpdate.city());
         address.setStreet(addressUpdate.street());
