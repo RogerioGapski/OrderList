@@ -1,7 +1,10 @@
 package com.orderList.orderList.services;
 
+import com.orderList.orderList.model.dto.request.product.CreateProductDTO;
+import com.orderList.orderList.model.dto.request.product.UpdateProductName;
+import com.orderList.orderList.model.dto.request.product.UpdateProductPrice;
+import com.orderList.orderList.model.dto.request.product.UpdateProductStock;
 import com.orderList.orderList.model.entities.Product;
-import com.orderList.orderList.model.dto.request.CreateProductDTO;
 import com.orderList.orderList.model.dto.response.ProductDTO;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
 import com.orderList.orderList.utils.mapper.ProductMapper;
@@ -18,8 +21,8 @@ public class ProductService {
     private final ProductMapper productMapper;
 
     @Transactional
-    public ProductDTO createProduct(CreateProductDTO dto) {
-        Product product = productMapper.toEntity(dto);
+    public ProductDTO createProduct(CreateProductDTO p) {
+        Product product = productMapper.toEntity(p);
         productRepository.save(product);
         return productMapper.toDTO(product);
     }
@@ -43,6 +46,36 @@ public class ProductService {
         Product product = productRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
 
+        return productMapper.toDTO(product);
+    }
+
+    @Transactional
+    public ProductDTO updatePrice(Long id, UpdateProductPrice newPrice) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product not found"));
+
+        product.setPrice(newPrice.price());
+        productRepository.save(product);
+        return productMapper.toDTO(product);
+    }
+
+    @Transactional
+    public ProductDTO updateStock(Long id, UpdateProductStock newStock){
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product not found"));
+
+        product.setStock(newStock.stock());
+        productRepository.save(product);
+        return productMapper.toDTO(product);
+    }
+
+    @Transactional
+    public ProductDTO updateName(Long id, UpdateProductName newName) {
+        Product product =  productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product not found"));
+
+        product.setName(newName.name());
+        productRepository.save(product);
         return productMapper.toDTO(product);
     }
 }

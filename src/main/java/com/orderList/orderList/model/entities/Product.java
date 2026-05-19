@@ -30,7 +30,7 @@ public class Product implements Serializable {
     private Double price;
 
     @Column(nullable = false)
-    private Long stock;
+    private Integer stock;
 
     @ManyToOne
     @JoinColumn(name = "items_id")
