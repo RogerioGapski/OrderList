@@ -1,7 +1,7 @@
 package com.orderList.orderList.services;
 
 import com.orderList.orderList.model.entities.User;
-import com.orderList.orderList.model.dto.request.CreateUserDTO;
+import com.orderList.orderList.model.dto.request.user.CreateUserDTO;
 import com.orderList.orderList.model.dto.response.UserDTO;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
 import com.orderList.orderList.utils.mapper.UserMapper;

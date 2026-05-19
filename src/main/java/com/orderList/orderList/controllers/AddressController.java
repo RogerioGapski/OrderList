@@ -1,7 +1,7 @@
 package com.orderList.orderList.controllers;
 
-import com.orderList.orderList.model.dto.request.CreateAddressDTO;
-import com.orderList.orderList.model.dto.request.UpdateAddressDTO;
+import com.orderList.orderList.model.dto.request.address.CreateAddressDTO;
+import com.orderList.orderList.model.dto.request.address.UpdateAddressDTO;
 import com.orderList.orderList.model.dto.response.AddressDTO;
 import com.orderList.orderList.services.AddressService;
 import jakarta.validation.Valid;

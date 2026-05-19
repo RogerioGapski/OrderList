@@ -1,10 +1,10 @@
 package com.orderList.orderList.services;
 
 import com.orderList.orderList.exceptions.customs.UnauthorizedException;
-import com.orderList.orderList.model.dto.request.UpdateAddressDTO;
+import com.orderList.orderList.model.dto.request.address.UpdateAddressDTO;
 import com.orderList.orderList.model.entities.Address;
 import com.orderList.orderList.model.entities.User;
-import com.orderList.orderList.model.dto.request.CreateAddressDTO;
+import com.orderList.orderList.model.dto.request.address.CreateAddressDTO;
 import com.orderList.orderList.model.dto.response.AddressDTO;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
 import com.orderList.orderList.utils.mapper.AddressMapper;

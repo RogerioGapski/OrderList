@@ -1,8 +1,8 @@
 package com.orderList.orderList.controllers;
 
-import com.orderList.orderList.model.dto.request.ChangeUserEmailDTO;
-import com.orderList.orderList.model.dto.request.ChangeUserNameDTO;
-import com.orderList.orderList.model.dto.request.CreateUserDTO;
+import com.orderList.orderList.model.dto.request.user.ChangeUserEmailDTO;
+import com.orderList.orderList.model.dto.request.user.ChangeUserNameDTO;
+import com.orderList.orderList.model.dto.request.user.CreateUserDTO;
 import com.orderList.orderList.model.dto.response.UserDTO;
 import com.orderList.orderList.services.UserService;
 import jakarta.validation.Valid;
