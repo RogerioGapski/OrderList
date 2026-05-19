@@ -74,7 +74,7 @@ public class AddressService {
     }
 
     @Transactional
-    public AddressDTO updateAddress(Long userId, UpdateAddressDTO addressUpdate, Long addressId) {
+    public AddressDTO updateAddress(Long userId, UpdateAddressDTO newAddress, Long addressId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
@@ -85,9 +85,9 @@ public class AddressService {
             throw new UnauthorizedException("This address does not belong to the user.");
         }
 
-        address.setCity(addressUpdate.city());
-        address.setStreet(addressUpdate.street());
-        address.setNumber(addressUpdate.number());
+        address.setCity(newAddress.city());
+        address.setStreet(newAddress.street());
+        address.setNumber(newAddress.number());
 
         addressRepository.save(address);
         return addressMapper.toDTO(address);

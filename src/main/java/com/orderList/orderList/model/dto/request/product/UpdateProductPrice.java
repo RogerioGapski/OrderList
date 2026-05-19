@@ -4,5 +4,5 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record UpdateProductPrice(
-        @NotNull @PositiveOrZero Double price) {
+        @NotNull @PositiveOrZero(message = "The price must be greater than 0.") Double price) {
 }
