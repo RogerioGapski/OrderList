@@ -4,7 +4,9 @@ import com.orderList.orderList.model.dto.request.user.UpdateEmailDTO;
 import com.orderList.orderList.model.dto.request.user.UpdateNameDTO;
 import com.orderList.orderList.model.dto.request.user.CreateUserDTO;
 import com.orderList.orderList.model.dto.response.UserDTO;
+import com.orderList.orderList.model.entities.User;
 import com.orderList.orderList.services.UserService;
+import com.orderList.orderList.utils.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.net.URI;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(

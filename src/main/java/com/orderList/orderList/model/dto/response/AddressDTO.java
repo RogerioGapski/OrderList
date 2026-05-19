@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record AddressDTO(
+            @NotNull Long id,
             @NotBlank String city,
             @NotBlank String street,
             @NotBlank @Pattern(

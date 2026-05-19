@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record ItemsDTO(
+            @NotNull Long id,
             @NotNull @PositiveOrZero Integer quantity,
             @NotNull @PositiveOrZero Double unitaryPrice){
 }

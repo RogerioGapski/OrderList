@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record ProductDTO(
+            @NotNull Long id,
             @NotBlank String name,
             @NotNull @PositiveOrZero Double price,
             @NotNull @PositiveOrZero Integer stock){

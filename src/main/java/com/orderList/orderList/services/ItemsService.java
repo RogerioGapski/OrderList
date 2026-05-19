@@ -57,7 +57,7 @@ public class ItemsService {
 
         items.setQuantity(items.getQuantity() + quantity);
         product.setStock(product.getStock() - quantity);
-        items.setUnitary_price(items.getUnitary_price() + (product.getPrice() * quantity));
+        items.setUnitaryPrice(items.getUnitaryPrice() + (product.getPrice() * quantity));
 
         productRepository.save(product);
         itemsRepository.save(items);
