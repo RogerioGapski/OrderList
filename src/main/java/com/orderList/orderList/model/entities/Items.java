@@ -25,8 +25,8 @@ public class Items implements Serializable {
     @Column(name = "products_quantity", nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false)
-    private Double unitary_price;
+    @Column(name = "unitary_price", nullable = false)
+    private Double unitaryPrice;
 
     @OneToMany(mappedBy = "orderItem", cascade = CascadeType.REMOVE)
     private List<Product> products;
