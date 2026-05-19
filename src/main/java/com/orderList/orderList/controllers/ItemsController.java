@@ -1,4 +1,4 @@
 package com.orderList.orderList.controllers;
 
-public class OrderItemController {
+public class ItemsController {
 }

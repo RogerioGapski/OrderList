@@ -2,7 +2,6 @@ package com.orderList.orderList.model.entities;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.io.Serializable;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "items_table")
-public class OrderItem implements Serializable {
+public class Items implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -39,8 +38,8 @@ public class OrderItem implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        OrderItem orderItem = (OrderItem) o;
-        return Objects.equals(id, orderItem.id);
+        Items items = (Items) o;
+        return Objects.equals(id, items.id);
     }
 
     @Override

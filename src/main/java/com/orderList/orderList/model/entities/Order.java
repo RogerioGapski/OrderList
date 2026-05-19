@@ -3,8 +3,6 @@ package com.orderList.orderList.model.entities;
 import com.orderList.orderList.model.enums.OrderStatus;
 import com.orderList.orderList.model.enums.Payments;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -46,7 +44,7 @@ public class Order implements Serializable {
     private User user;
 
     @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems;
+    private List<Items> itens;
 
     @Override
     public boolean equals(Object o) {

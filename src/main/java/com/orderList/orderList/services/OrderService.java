@@ -1,13 +1,13 @@
 package com.orderList.orderList.services;
 
+import com.orderList.orderList.model.entities.Items;
 import com.orderList.orderList.model.entities.Order;
-import com.orderList.orderList.model.entities.OrderItem;
 import com.orderList.orderList.model.dto.request.CreateOrderDTO;
 import com.orderList.orderList.model.dto.response.OrderDTO;
 import com.orderList.orderList.exceptions.customs.BadRequestException;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
 import com.orderList.orderList.utils.mapper.OrderMapper;
-import com.orderList.orderList.repository.OrderItemRepository;
+import com.orderList.orderList.repository.ItemsRepository;
 import com.orderList.orderList.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final OrderItemRepository orderItemRepository;
+    private final ItemsRepository itemsRepository;
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
 
@@ -48,23 +48,23 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
 
-        OrderItem orderItem = orderItemRepository.findById(orderItemId)
+        Items items = itemsRepository.findById(orderItemId)
                 .orElseThrow(() -> new NotFoundException("Order item not found"));
 
-        orderItem.setOrder(order);
-        orderItemRepository.save(orderItem);
+        items.setOrder(order);
+        itemsRepository.save(items);
     }
 
     @Transactional
     public void removeOrderItem(Long orderId, Long orderItemId) {
-        OrderItem orderItem = orderItemRepository.findById(orderItemId)
+        Items items = itemsRepository.findById(orderItemId)
                 .orElseThrow(() -> new NotFoundException("Order item not found"));
 
-        if(orderItem.getOrder() == null || !orderItem.getOrder().getId().equals(orderId)) {
+        if(items.getOrder() == null || !items.getOrder().getId().equals(orderId)) {
             throw new BadRequestException("Order item does not belong to this Order");
         }
 
-        orderItem.setOrder(null);
-        orderItemRepository.save(orderItem);
+        items.setOrder(null);
+        itemsRepository.save(items);
     }
 }

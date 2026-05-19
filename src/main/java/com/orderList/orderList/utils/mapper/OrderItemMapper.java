@@ -1,12 +1,12 @@
 package com.orderList.orderList.utils.mapper;
 
-import com.orderList.orderList.model.entities.OrderItem;
-import com.orderList.orderList.model.dto.request.CreateOrderItemDTO;
-import com.orderList.orderList.model.dto.response.OrderItemDTO;
+import com.orderList.orderList.model.dto.request.CreateItemsDTO;
+import com.orderList.orderList.model.dto.response.ItemsDTO;
+import com.orderList.orderList.model.entities.Items;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface OrderItemMapper {
-    OrderItemDTO toDTO(OrderItem orderItem);
-    OrderItem toEntity(CreateOrderItemDTO dto);
+    ItemsDTO toDTO(Items items);
+    Items toEntity(CreateItemsDTO dto);
 }

@@ -1,9 +1,6 @@
 package com.orderList.orderList.model.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import java.io.Serializable;
@@ -34,7 +31,7 @@ public class Product implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "items_id")
-    private OrderItem orderItem;
+    private Items items;
 
     @Override
     public boolean equals(Object o) {
