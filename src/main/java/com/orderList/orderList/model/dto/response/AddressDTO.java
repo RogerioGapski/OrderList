@@ -8,8 +8,6 @@ public record AddressDTO(
             @NotNull Long id,
             @NotBlank String city,
             @NotBlank String street,
-            @NotBlank @Pattern(
-                    regexp = "^[0-9]+$", message = "The house number should contain only numbers."
-            ) String number){
+            @NotBlank String number){
 }
 

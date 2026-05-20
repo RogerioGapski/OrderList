@@ -29,31 +29,27 @@ public class ItemsService {
     }
 
     @Transactional
-    public void deleteById(Long orderItemId){
-        Items items = itemsRepository.findById(orderItemId)
-                .orElseThrow(() -> new NotFoundException("OrderItem not found"));
+    public void deleteById(Long itemsId){
+        Items items = itemsRepository.findById(itemsId)
+                .orElseThrow(() -> new NotFoundException("Items not found"));
 
         itemsRepository.delete(items);
     }
 
-    public ItemsDTO findById(Long orderItemId){
-        Items items = itemsRepository.findById(orderItemId)
-                .orElseThrow(() -> new NotFoundException("OrderItem not found"));
+    public ItemsDTO findById(Long itemsId){
+        Items items = itemsRepository.findById(itemsId)
+                .orElseThrow(() -> new NotFoundException("Items not found"));
 
         return orderItemMapper.toDTO(items);
     }
 
     @Transactional
-    public ItemsDTO changeQuantity(Long orderItemId, Long productId, Integer quantity){
-        Items items = itemsRepository.findById(orderItemId)
-                .orElseThrow(() -> new NotFoundException("Order item not found"));
+    public ItemsDTO changeQuantity(Long itemsId, Long productId, Integer quantity){
+        Items items = itemsRepository.findById(itemsId)
+                .orElseThrow(() -> new NotFoundException("Items not found"));
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
-
-        if(product.getStock() < quantity){
-            throw new BadRequestException("Not enough stock");
-        }
 
         items.setQuantity(items.getQuantity() + quantity);
         product.setStock(product.getStock() - quantity);
@@ -65,12 +61,19 @@ public class ItemsService {
     }
 
     @Transactional
-    public ItemsDTO increaseQuantity(Long orderItemId, Long productId, Integer quantity) {
-        return changeQuantity(orderItemId, productId, quantity);
+    public ItemsDTO increaseQuantity(Long itemsId, Long productId, Integer quantity) {
+        return changeQuantity(itemsId, productId, quantity);
     }
 
     @Transactional
-    public ItemsDTO decreaseQuantity(Long orderItemId, Long productId, Integer quantity){
-        return changeQuantity(orderItemId, productId, -quantity);
+    public ItemsDTO decreaseQuantity(Long itemsId, Long productId, Integer quantity){
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("Product not found"));
+
+        if(product.getStock() < quantity){
+            throw new BadRequestException("Product is not enough stock");
+        }
+
+        return changeQuantity(itemsId, productId, -quantity);
     }
 }

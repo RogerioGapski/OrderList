@@ -1,9 +1,6 @@
 package com.orderList.orderList.services;
 
-import com.orderList.orderList.model.dto.request.product.CreateProductDTO;
-import com.orderList.orderList.model.dto.request.product.UpdateProductName;
-import com.orderList.orderList.model.dto.request.product.UpdateProductPrice;
-import com.orderList.orderList.model.dto.request.product.UpdateProductStock;
+import com.orderList.orderList.model.dto.request.product.*;
 import com.orderList.orderList.model.entities.Product;
 import com.orderList.orderList.model.dto.response.ProductDTO;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
@@ -12,6 +9,8 @@ import com.orderList.orderList.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,16 +28,12 @@ public class ProductService {
 
     @Transactional
     public void deleteById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product not found"));
-
+        Product product = findByIdMethod(id);
         productRepository.delete(product);
     }
 
     public ProductDTO findById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product not found"));
-
+        Product product = findByIdMethod(id);
         return productMapper.toDTO(product);
     }
 
@@ -49,11 +44,16 @@ public class ProductService {
         return productMapper.toDTO(product);
     }
 
+    public List<ProductDTO> findByCategory(String category) {
+        List<Product> products =  productRepository.findByCategory(category);
+        return products.stream()
+                .map(productMapper::toDTO)
+                .toList();
+    }
+
     @Transactional
     public ProductDTO updatePrice(Long id, UpdateProductPrice newPrice) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product not found"));
-
+        Product product = findByIdMethod(id);
         product.setPrice(newPrice.price());
         productRepository.save(product);
         return productMapper.toDTO(product);
@@ -61,9 +61,7 @@ public class ProductService {
 
     @Transactional
     public ProductDTO updateStock(Long id, UpdateProductStock newStock){
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product not found"));
-
+        Product product = findByIdMethod(id);
         product.setStock(newStock.stock());
         productRepository.save(product);
         return productMapper.toDTO(product);
@@ -71,11 +69,22 @@ public class ProductService {
 
     @Transactional
     public ProductDTO updateName(Long id, UpdateProductName newName) {
-        Product product =  productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product not found"));
-
+        Product product = findByIdMethod(id);
         product.setName(newName.name());
         productRepository.save(product);
         return productMapper.toDTO(product);
+    }
+
+    @Transactional
+    public ProductDTO updateCategory(Long id, UpdateProductCategory newCategory) {
+        Product product = findByIdMethod(id);
+        product.setCategory(newCategory.category());
+        productRepository.save(product);
+        return productMapper.toDTO(product);
+    }
+
+    public Product findByIdMethod(Long id){
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 }

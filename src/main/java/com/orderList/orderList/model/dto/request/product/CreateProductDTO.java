@@ -7,6 +7,10 @@ import jakarta.validation.constraints.Pattern;
 public record CreateProductDTO(
         @NotBlank @Pattern(
                 regexp = "^[a-zA-ZÀ-ú\\s]+$") String name,
+
+        @NotBlank @Pattern(
+                regexp = "^[a-zA-ZÀ-ú\\s]+$") String category,
+
         @NotNull Double price,
         @NotNull Integer stock) {
 }
