@@ -1,12 +1,13 @@
 package com.orderList.orderList.services;
 
+import com.orderList.orderList.model.dto.request.items.UpdateItemsQuantity;
 import com.orderList.orderList.model.dto.response.ItemsDTO;
 import com.orderList.orderList.model.entities.Items;
 import com.orderList.orderList.model.entities.Product;
-import com.orderList.orderList.model.dto.request.CreateItemsDTO;
+import com.orderList.orderList.model.dto.request.items.CreateItemsDTO;
 import com.orderList.orderList.exceptions.customs.BadRequestException;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
-import com.orderList.orderList.utils.mapper.OrderItemMapper;
+import com.orderList.orderList.utils.mapper.ItemsMapper;
 import com.orderList.orderList.repository.ItemsRepository;
 import com.orderList.orderList.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,13 @@ public class ItemsService {
 
     private final ProductRepository productRepository;
     private final ItemsRepository itemsRepository;
-    private final OrderItemMapper orderItemMapper;
+    private final ItemsMapper itemsMapper;
 
     @Transactional
     public ItemsDTO createItems(CreateItemsDTO dto) {
-        Items items = orderItemMapper.toEntity(dto);
+        Items items = itemsMapper.toEntity(dto);
         itemsRepository.save(items);
-        return orderItemMapper.toDTO(items);
+        return itemsMapper.toDTO(items);
     }
 
     @Transactional
@@ -40,7 +41,7 @@ public class ItemsService {
         Items items = itemsRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
-        return orderItemMapper.toDTO(items);
+        return itemsMapper.toDTO(items);
     }
 
     @Transactional
@@ -57,7 +58,7 @@ public class ItemsService {
 
         productRepository.save(product);
         itemsRepository.save(items);
-        return orderItemMapper.toDTO(items);
+        return itemsMapper.toDTO(items);
     }
 
     @Transactional
@@ -66,14 +67,14 @@ public class ItemsService {
     }
 
     @Transactional
-    public ItemsDTO decreaseQuantity(Long itemsId, Long productId, Integer quantity){
+    public ItemsDTO decreaseQuantity(Long itemsId, Long productId, UpdateItemsQuantity quantity){
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
 
-        if(product.getStock() < quantity){
+        if(product.getStock() < quantity.quantity()){
             throw new BadRequestException("Product is not enough stock");
         }
 
-        return changeQuantity(itemsId, productId, -quantity);
+        return changeQuantity(itemsId, productId, -quantity.quantity());
     }
 }

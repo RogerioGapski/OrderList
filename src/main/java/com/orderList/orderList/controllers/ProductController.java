@@ -90,8 +90,8 @@ public class ProductController {
     @PatchMapping("/category/{id}")
     public ResponseEntity<ProductDTO> updateCategory(
             @PathVariable Long id,
-            @RequestBody Category newCategory
+            @RequestBody @Valid Category newCategory
     ){
-        return ResponseEntity.ok().body(productService.updateCategory(id, Category));
+        return ResponseEntity.ok().body(productService.updateCategory(id, newCategory));
     }
 }

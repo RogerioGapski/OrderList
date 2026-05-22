@@ -1,4 +1,4 @@
-package com.orderList.orderList.model.dto.request;
+package com.orderList.orderList.model.dto.request.items;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
