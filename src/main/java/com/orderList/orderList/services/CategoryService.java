@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -33,6 +35,13 @@ public class CategoryService {
     public CategoryDTO findById(Long id){
         Category category = findByIdMethod(id);
         return categoryMapper.toDTO(category);
+    }
+
+    public List<CategoryDTO> findAll(){
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream()
+                .map(categoryMapper::toDTO)
+                .toList();
     }
 
     @Transactional
