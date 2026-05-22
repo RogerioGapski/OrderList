@@ -29,7 +29,8 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private Integer stock;
 
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private String category;
 
     @ManyToOne

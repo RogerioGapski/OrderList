@@ -1,5 +1,6 @@
 package com.orderList.orderList.services;
 
+import com.orderList.orderList.model.dto.request.category.UpdateCategoryDTO;
 import com.orderList.orderList.model.dto.request.product.*;
 import com.orderList.orderList.model.entities.Product;
 import com.orderList.orderList.model.dto.response.ProductDTO;
@@ -76,7 +77,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO updateCategory(Long id, UpdateProductCategory newCategory) {
+    public ProductDTO updateCategory(Long id, UpdateCategoryDTO newCategory) {
         Product product = findByIdMethod(id);
         product.setCategory(newCategory.category());
         productRepository.save(product);

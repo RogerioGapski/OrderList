@@ -22,7 +22,7 @@ public class ItemsService {
     private final OrderItemMapper orderItemMapper;
 
     @Transactional
-    public ItemsDTO createOrderItem(CreateItemsDTO dto) {
+    public ItemsDTO createItems(CreateItemsDTO dto) {
         Items items = orderItemMapper.toEntity(dto);
         itemsRepository.save(items);
         return orderItemMapper.toDTO(items);

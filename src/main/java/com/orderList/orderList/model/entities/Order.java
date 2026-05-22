@@ -30,12 +30,14 @@ public class Order implements Serializable {
     @Column(nullable = false, updatable = false)
     private Instant date;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;
 
     @Column(nullable = false)
     private Double total;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Payments paymentType;
 
@@ -44,7 +46,7 @@ public class Order implements Serializable {
     private User user;
 
     @OneToMany(mappedBy = "order")
-    private List<Items> itens;
+    private List<Items> items;
 
     @Override
     public boolean equals(Object o) {
