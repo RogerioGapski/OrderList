@@ -3,9 +3,7 @@ package com.orderList.orderList.controllers;
 import com.orderList.orderList.model.dto.request.items.CreateItemsDTO;
 import com.orderList.orderList.model.dto.request.items.UpdateItemsQuantity;
 import com.orderList.orderList.model.dto.response.ItemsDTO;
-import com.orderList.orderList.model.entities.Items;
 import com.orderList.orderList.services.ItemsService;
-import com.orderList.orderList.utils.mapper.ItemsMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +18,6 @@ import java.net.URI;
 public class ItemsController {
 
     private final ItemsService itemsService;
-    private final ItemsMapper itemsMapper;
 
     @PostMapping
     public ResponseEntity<ItemsDTO> createItems(
@@ -70,7 +67,4 @@ public class ItemsController {
         return ResponseEntity.ok()
                 .body(itemsService.decreaseQuantity(itemsId, productId, quantity));
     }
-
-
-    
 }

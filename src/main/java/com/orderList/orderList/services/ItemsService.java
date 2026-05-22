@@ -23,8 +23,12 @@ public class ItemsService {
     private final ItemsMapper itemsMapper;
 
     @Transactional
-    public ItemsDTO createItems(CreateItemsDTO dto) {
+    public ItemsDTO createItems(CreateItemsDTO dto, Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("Product not found"));
         Items items = itemsMapper.toEntity(dto);
+        items.setUnitaryPrice(dto.quantity() * product.getPrice());
+        items.setProducts(itemsRepository.addProduct(product));
         itemsRepository.save(items);
         return itemsMapper.toDTO(items);
     }
