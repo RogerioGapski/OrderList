@@ -8,7 +8,6 @@ import com.orderList.orderList.model.entities.Category;
 import com.orderList.orderList.repository.CategoryRepository;
 import com.orderList.orderList.utils.mapper.CategoryMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

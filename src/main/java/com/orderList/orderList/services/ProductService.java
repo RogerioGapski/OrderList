@@ -2,6 +2,7 @@ package com.orderList.orderList.services;
 
 import com.orderList.orderList.model.dto.request.category.UpdateCategoryDTO;
 import com.orderList.orderList.model.dto.request.product.*;
+import com.orderList.orderList.model.entities.Category;
 import com.orderList.orderList.model.entities.Product;
 import com.orderList.orderList.model.dto.response.ProductDTO;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
@@ -77,9 +78,9 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO updateCategory(Long id, UpdateCategoryDTO newCategory) {
+    public ProductDTO updateCategory(Long id, Category newCategory) {
         Product product = findByIdMethod(id);
-        product.setCategory(newCategory.category());
+        product.setCategory(newCategory);
         productRepository.save(product);
         return productMapper.toDTO(product);
     }

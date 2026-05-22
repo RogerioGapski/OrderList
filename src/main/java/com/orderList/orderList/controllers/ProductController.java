@@ -1,7 +1,9 @@
 package com.orderList.orderList.controllers;
 
+import com.orderList.orderList.model.dto.request.category.UpdateCategoryDTO;
 import com.orderList.orderList.model.dto.request.product.*;
 import com.orderList.orderList.model.dto.response.ProductDTO;
+import com.orderList.orderList.model.entities.Category;
 import com.orderList.orderList.services.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -88,8 +90,8 @@ public class ProductController {
     @PatchMapping("/category/{id}")
     public ResponseEntity<ProductDTO> updateCategory(
             @PathVariable Long id,
-            @RequestBody UpdateProductCategory newCategory
+            @RequestBody Category newCategory
     ){
-        return ResponseEntity.ok().body(productService.updateCategory(id, newCategory));
+        return ResponseEntity.ok().body(productService.updateCategory(id, Category));
     }
 }
