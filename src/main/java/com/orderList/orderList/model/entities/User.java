@@ -37,6 +37,9 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
+    @OneToMany(mappedBy = "user")
+    private List<Items> items;
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

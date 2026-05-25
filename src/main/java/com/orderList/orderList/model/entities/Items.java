@@ -35,6 +35,10 @@ public class Items implements Serializable {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

@@ -1,8 +1,8 @@
 package com.orderList.orderList.model.dto.request.items;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 
 public record CreateItemsDTO(
-        @NotNull @PositiveOrZero(message = "The number must be zero or positive.") Integer quantity){
+        @NotNull @Positive(message = "The number must be bigger than zero.") Integer quantity){
 }

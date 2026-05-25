@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ItemsRepository extends JpaRepository<Items, Long> {
     List<Product> addProduct(Product product);
+    List<Items> findAllByUser(Long userId);
 }
