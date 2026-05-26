@@ -1,15 +1,10 @@
 package com.orderList.orderList.model.dto.response;
 
-import com.orderList.orderList.model.entities.Category;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
-
 public record ProductDTO(
-            @NotNull Long id,
-            @NotBlank String name,
-            @NotBlank Category category,
-            @NotNull @PositiveOrZero Double price,
-            @NotNull @PositiveOrZero Integer stock){
+            Long id,
+            String name,
+            CategoryDTO category,
+            Double price,
+            Integer stock){
 }
 
