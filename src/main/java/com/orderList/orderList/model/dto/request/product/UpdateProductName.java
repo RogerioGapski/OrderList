@@ -5,5 +5,6 @@ import jakarta.validation.constraints.Pattern;
 
 public record UpdateProductName(
         @NotBlank @Pattern(
-                regexp = "^[a-zA-ZÀ-ú\\s]+$", message = "The name must contain just letters.") String name) {
+                regexp = "^[a-zA-ZÀ-ú\\s]+$",
+                message = "The name must contain only letters.") String name) {
 }
