@@ -5,6 +5,6 @@ import jakarta.validation.constraints.Pattern;
 
 public record UpdateNameDTO(
         @NotBlank @Pattern(
-                regexp = "^[a-zA-ZÀ-ú\\s]+$", message = "The user name must contain just letters."
-        ) String name){
+                regexp = "^[a-zA-ZÀ-ú\\s]+$",
+                message = "The user name must contain only letters.") String name) {
 }
