@@ -1,5 +1,6 @@
 package com.orderList.orderList.services;
 
+import com.orderList.orderList.exceptions.customs.AlreadyExistsException;
 import com.orderList.orderList.model.entities.User;
 import com.orderList.orderList.model.dto.request.user.CreateUserDTO;
 import com.orderList.orderList.model.dto.response.UserDTO;
@@ -18,59 +19,62 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional
-    public UserDTO createUser(CreateUserDTO userDTO) {
-        User user = userMapper.toEntity(userDTO);
+    public UserDTO createUser(CreateUserDTO dto) {
+        if(userRepository.existsByEmail(dto.email())){
+            throw new AlreadyExistsException("Email already in use.");
+        }
+
+        User user = userMapper.toEntity(dto);
         userRepository.save(user);
         return userMapper.toDTO(user);
     }
 
     @Transactional
     public void deleteById(Long id){
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
+        User user = findUserById(id);
         userRepository.delete(user);
     }
 
     @Transactional
     public void deleteByEmail(String email){
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
+        User user = findUserByEmail(email);
         userRepository.delete(user);
     }
 
     public UserDTO findById(Long id){
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        return userMapper.toDTO(user);
+        return userMapper.toDTO(findUserById(id));
     }
 
     public UserDTO findByEmail(String email){
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        return userMapper.toDTO(user);
+        return userMapper.toDTO(findUserByEmail(email));
     }
 
     @Transactional
     public UserDTO changeName(Long id, String newName){
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
+        User user = findUserById(id);
         user.setName(newName);
         userRepository.save(user);
         return userMapper.toDTO(user);
     }
 
     @Transactional
-    public UserDTO changeEmail(String email, String newEmail) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
+    public UserDTO changeEmail(Long id, String newEmail) {
+        if(userRepository.existsByEmail(newEmail)){
+            throw new AlreadyExistsException("Email already in use.");
+        }
+        User user = findUserById(id);
         user.setEmail(newEmail);
         userRepository.save(user);
         return userMapper.toDTO(user);
+    }
+
+    public User findUserById(Long id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    public User findUserByEmail(String email){
+        return  userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 }
