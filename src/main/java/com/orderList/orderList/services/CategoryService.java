@@ -58,7 +58,7 @@ public class CategoryService {
         return categoryMapper.toDTO(category);
     }
 
-    public Category findCategoryById(Long id){
+    private Category findCategoryById(Long id){
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Category not found."));
     }

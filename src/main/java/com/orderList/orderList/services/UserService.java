@@ -68,12 +68,12 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    private User findUserById(Long id){
+    public User findUserById(Long id){
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    private User findUserByEmail(String email){
+    public User findUserByEmail(String email){
         return  userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }

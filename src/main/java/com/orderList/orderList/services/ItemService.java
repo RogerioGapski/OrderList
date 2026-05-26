@@ -1,5 +1,6 @@
 package com.orderList.orderList.services;
 
+import com.orderList.orderList.exceptions.customs.UnauthorizedException;
 import com.orderList.orderList.model.dto.request.item.CreateItemDTO;
 import com.orderList.orderList.model.dto.request.item.UpdateItemQuantity;
 import com.orderList.orderList.model.dto.response.ItemDTO;
@@ -8,6 +9,7 @@ import com.orderList.orderList.model.entities.Order;
 import com.orderList.orderList.model.entities.Product;
 import com.orderList.orderList.exceptions.customs.BadRequestException;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
+import com.orderList.orderList.model.entities.User;
 import com.orderList.orderList.repository.OrderRepository;
 import com.orderList.orderList.utils.mapper.ItemMapper;
 import com.orderList.orderList.repository.ItemRepository;
@@ -26,51 +28,66 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
     private final OrderRepository orderRepository;
+    private final UserService userService;
 
     @Transactional
-    public ItemDTO createItems(CreateItemDTO dto, Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product not found"));
+    public ItemDTO createItems(CreateItemDTO dto, Long productId, Long userId) {
+        Product product = findProductById(productId);
+        if(product.getStock() < dto.quantity()){
+            throw new BadRequestException("Insufficient stock for this product.");
+        }
+
+        User user = userService.findUserById(userId);
+
         Item item = itemMapper.toEntity(dto);
+        item.setProduct(product);
+        item.setUser(user);
         item.setUnitaryPrice(dto.quantity() * product.getPrice());
-        item.setProducts(itemRepository.addProduct(product));
+
+        product.setStock(product.getStock() - dto.quantity());
+        productRepository.save(product);
+
         itemRepository.save(item);
         return itemMapper.toDTO(item);
     }
 
     @Transactional
-    public void deleteById(Long itemsId){
-        Item item = itemRepository.findById(itemsId)
-                .orElseThrow(() -> new NotFoundException("Items not found"));
+    public void deleteById(Long itemId, Long userId){
+        Item item = findItemById(itemId);
+        checkOwnership(item, userId);
+
+        Product product = item.getProduct();
+        product.setStock(product.getStock() + item.getQuantity());
+        productRepository.save(product);
 
         itemRepository.delete(item);
     }
 
-    public ItemDTO findById(Long itemsId){
-        Item item = itemRepository.findById(itemsId)
-                .orElseThrow(() -> new NotFoundException("Items not found"));
-
+    public ItemDTO findById(Long itemId, Long userId){
+        Item item = findItemById(itemId);
+        checkOwnership(item, userId);
         return itemMapper.toDTO(item);
     }
 
     public List<ItemDTO> findAll(Long userId) {
-        List<Item> items = itemRepository.findAllByUser(userId);
-        return items.stream()
+        return itemRepository.findAllByUserId(userId).stream()
                 .map(itemMapper::toDTO)
                 .toList();
     }
 
     @Transactional
-    public ItemDTO changeQuantity(Long itemsId, Long productId, Integer quantity){
-        Item item = itemRepository.findById(itemsId)
-                .orElseThrow(() -> new NotFoundException("Items not found"));
+    public ItemDTO increaseQuantity(Long itemId, Long userId, UpdateItemQuantity dto) {
+        Item item = findItemById(itemId);
+        checkOwnership(item, userId);
+        Product product = item.getProduct();
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product not found"));
+        if(product.getStock() < dto.quantity()){
+            throw new BadRequestException("Insufficient stock for this product.");
+        }
 
-        item.setQuantity(item.getQuantity() + quantity);
-        product.setStock(product.getStock() - quantity);
-        item.setUnitaryPrice(item.getUnitaryPrice() + (product.getPrice() * quantity));
+        product.setStock(product.getStock() - dto.quantity());
+        item.setQuantity(item.getQuantity() + dto.quantity());
+        item.setUnitaryPrice(item.getQuantity() * product.getPrice());
 
         productRepository.save(product);
         itemRepository.save(item);
@@ -78,31 +95,53 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemDTO increaseQuantity(Long itemsId, Long productId, UpdateItemQuantity increase) {
-        return changeQuantity(itemsId, productId, increase.quantity());
-    }
+    public ItemDTO decreaseQuantity(Long itemId, Long userId, UpdateItemQuantity dto){
+        Item item = findItemById(itemId);
+        checkOwnership(item, userId);
+        Product product = item.getProduct();
 
-    @Transactional
-    public ItemDTO decreaseQuantity(Long itemsId, Long productId, UpdateItemQuantity decrease){
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product not found"));
-
-        if(product.getStock() < decrease.quantity()){
-            throw new BadRequestException("Product is not enough stock");
+        if(item.getQuantity() < dto.quantity()){
+            throw new BadRequestException("Cannot decrease more than the current item quantity.");
         }
 
-        return changeQuantity(itemsId, productId, -decrease.quantity());
+        product.setStock(product.getStock() + dto.quantity());
+        item.setQuantity(item.getQuantity() - dto.quantity());
+        item.setUnitaryPrice(item.getQuantity() * product.getPrice());
+
+        productRepository.save(product);
+        itemRepository.save(item);
+        return itemMapper.toDTO(item);
     }
 
     @Transactional
-    public void addToOrder(Long itemsId, Long orderId){
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order not found"));
+    public void addToOrder(Long itemId, Long orderId, Long userId) {
+        Item item = findItemById(itemId);
+        checkOwnership(item, userId);
 
-        Item item = itemRepository.findById(itemsId)
-                .orElseThrow(() -> new NotFoundException("Items not found"));
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found."));
+
+        if(!order.getUser().getId().equals(userId)){
+            throw new UnauthorizedException("Order does not belong to this user.");
+        }
 
         item.setOrder(order);
         itemRepository.save(item);
+    }
+
+    private Item findItemById(Long id){
+        return itemRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Item not found."));
+    }
+
+    private Product findProductById(Long id){
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product not found."));
+    }
+
+    private void checkOwnership(Item item, Long userId){
+        if(!item.getUser().getId().equals(userId)){
+            throw new UnauthorizedException("Item does not belong to this user.");
+        }
     }
 }
