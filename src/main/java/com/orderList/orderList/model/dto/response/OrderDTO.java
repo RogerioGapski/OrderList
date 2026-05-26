@@ -12,6 +12,6 @@ public record OrderDTO(
         OrderStatus status,
         Double total,
         Payments paymentType,
-        List<ItemsDTO> items){
+        List<ItemDTO> items){
 }
 

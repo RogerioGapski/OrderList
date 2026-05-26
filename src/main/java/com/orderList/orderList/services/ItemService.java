@@ -1,15 +1,15 @@
 package com.orderList.orderList.services;
 
-import com.orderList.orderList.model.dto.request.items.CreateItemDTO;
-import com.orderList.orderList.model.dto.request.items.UpdateItemsQuantity;
-import com.orderList.orderList.model.dto.response.ItemsDTO;
+import com.orderList.orderList.model.dto.request.item.CreateItemDTO;
+import com.orderList.orderList.model.dto.request.item.UpdateItemQuantity;
+import com.orderList.orderList.model.dto.response.ItemDTO;
 import com.orderList.orderList.model.entities.Item;
 import com.orderList.orderList.model.entities.Order;
 import com.orderList.orderList.model.entities.Product;
 import com.orderList.orderList.exceptions.customs.BadRequestException;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
 import com.orderList.orderList.repository.OrderRepository;
-import com.orderList.orderList.utils.mapper.ItemsMapper;
+import com.orderList.orderList.utils.mapper.ItemMapper;
 import com.orderList.orderList.repository.ItemRepository;
 import com.orderList.orderList.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,22 +20,22 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ItemsService {
+public class ItemService {
 
     private final ProductRepository productRepository;
     private final ItemRepository itemRepository;
-    private final ItemsMapper itemsMapper;
+    private final ItemMapper itemMapper;
     private final OrderRepository orderRepository;
 
     @Transactional
-    public ItemsDTO createItems(CreateItemDTO dto, Long productId) {
+    public ItemDTO createItems(CreateItemDTO dto, Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
-        Item item = itemsMapper.toEntity(dto);
+        Item item = itemMapper.toEntity(dto);
         item.setUnitaryPrice(dto.quantity() * product.getPrice());
         item.setProducts(itemRepository.addProduct(product));
         itemRepository.save(item);
-        return itemsMapper.toDTO(item);
+        return itemMapper.toDTO(item);
     }
 
     @Transactional
@@ -46,22 +46,22 @@ public class ItemsService {
         itemRepository.delete(item);
     }
 
-    public ItemsDTO findById(Long itemsId){
+    public ItemDTO findById(Long itemsId){
         Item item = itemRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
-        return itemsMapper.toDTO(item);
+        return itemMapper.toDTO(item);
     }
 
-    public List<ItemsDTO> findAll(Long userId) {
+    public List<ItemDTO> findAll(Long userId) {
         List<Item> items = itemRepository.findAllByUser(userId);
         return items.stream()
-                .map(itemsMapper::toDTO)
+                .map(itemMapper::toDTO)
                 .toList();
     }
 
     @Transactional
-    public ItemsDTO changeQuantity(Long itemsId, Long productId, Integer quantity){
+    public ItemDTO changeQuantity(Long itemsId, Long productId, Integer quantity){
         Item item = itemRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
@@ -74,16 +74,16 @@ public class ItemsService {
 
         productRepository.save(product);
         itemRepository.save(item);
-        return itemsMapper.toDTO(item);
+        return itemMapper.toDTO(item);
     }
 
     @Transactional
-    public ItemsDTO increaseQuantity(Long itemsId, Long productId, UpdateItemsQuantity increase) {
+    public ItemDTO increaseQuantity(Long itemsId, Long productId, UpdateItemQuantity increase) {
         return changeQuantity(itemsId, productId, increase.quantity());
     }
 
     @Transactional
-    public ItemsDTO decreaseQuantity(Long itemsId, Long productId, UpdateItemsQuantity decrease){
+    public ItemDTO decreaseQuantity(Long itemsId, Long productId, UpdateItemQuantity decrease){
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
 

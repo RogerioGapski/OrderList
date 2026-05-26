@@ -1,6 +1,6 @@
 package com.orderList.orderList.model.dto.response;
 
-public record ItemsDTO(
+public record ItemDTO(
             Long id,
             Integer quantity,
             Double unitaryPrice,

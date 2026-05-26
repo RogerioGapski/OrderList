@@ -1,9 +1,9 @@
 package com.orderList.orderList.controllers;
 
-import com.orderList.orderList.model.dto.request.items.CreateItemDTO;
-import com.orderList.orderList.model.dto.request.items.UpdateItemsQuantity;
-import com.orderList.orderList.model.dto.response.ItemsDTO;
-import com.orderList.orderList.services.ItemsService;
+import com.orderList.orderList.model.dto.request.item.CreateItemDTO;
+import com.orderList.orderList.model.dto.request.item.UpdateItemQuantity;
+import com.orderList.orderList.model.dto.response.ItemDTO;
+import com.orderList.orderList.services.ItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +16,16 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/items")
-public class ItemsController {
+public class ItemController {
 
-    private final ItemsService itemsService;
+    private final ItemService itemService;
 
     @PostMapping("/{productId}")
-    public ResponseEntity<ItemsDTO> createItems(
+    public ResponseEntity<ItemDTO> createItems(
             @PathVariable Long productId,
             @RequestBody @Valid CreateItemDTO dto
     ){
-        ItemsDTO items = itemsService.createItems(dto, productId);
+        ItemDTO items = itemService.createItems(dto, productId);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -39,42 +39,42 @@ public class ItemsController {
     public ResponseEntity<Void> deleteItems(
             @PathVariable Long id
     ){
-        itemsService.deleteById(id);
+        itemService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemsDTO> getById(
+    public ResponseEntity<ItemDTO> getById(
             @PathVariable Long id
     ){
-        return ResponseEntity.ok().body(itemsService.findById(id));
+        return ResponseEntity.ok().body(itemService.findById(id));
     }
 
     @GetMapping("/all/{userId}")
-    public ResponseEntity<List<ItemsDTO>> getAll(
+    public ResponseEntity<List<ItemDTO>> getAll(
             @PathVariable Long userId
     ){
-        return ResponseEntity.ok().body(itemsService.findAll(userId));
+        return ResponseEntity.ok().body(itemService.findAll(userId));
     }
 
     @PatchMapping("/increase/{itemId}/{productId}")
-    public ResponseEntity<ItemsDTO> increaseQuantity(
+    public ResponseEntity<ItemDTO> increaseQuantity(
             @PathVariable Long itemsId,
             @PathVariable Long productId,
-            @RequestBody @Valid UpdateItemsQuantity increase
+            @RequestBody @Valid UpdateItemQuantity increase
             ){
         return ResponseEntity.ok()
-                .body(itemsService.increaseQuantity(itemsId, productId, increase));
+                .body(itemService.increaseQuantity(itemsId, productId, increase));
     }
 
     @PatchMapping("/decrease/{itemId}/{productId}")
-    public ResponseEntity<ItemsDTO> decreaseQuantity(
+    public ResponseEntity<ItemDTO> decreaseQuantity(
             @PathVariable Long itemsId,
             @PathVariable Long productId,
-            @RequestBody @Valid UpdateItemsQuantity decrease
+            @RequestBody @Valid UpdateItemQuantity decrease
     ){
         return ResponseEntity.ok()
-                .body(itemsService.decreaseQuantity(itemsId, productId, decrease));
+                .body(itemService.decreaseQuantity(itemsId, productId, decrease));
     }
 
     @PatchMapping("/add/{itemId}/{orderId}")
@@ -82,7 +82,7 @@ public class ItemsController {
             @PathVariable Long itemsId,
             @PathVariable Long orderId
     ){
-        itemsService.addToOrder(itemsId, orderId);
+        itemService.addToOrder(itemsId, orderId);
         return ResponseEntity.noContent().build();
     }
 }
