@@ -26,9 +26,7 @@ public class AddressService {
 
     @Transactional
     public AddressDTO createAddress(CreateAddressDTO dto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
+        User user = findUserById(userId);
         Address address = addressMapper.toEntity(dto);
         address.setUser(user);
         addressRepository.save(address);
@@ -37,59 +35,53 @@ public class AddressService {
 
     @Transactional
     public void deleteById(Long userId, Long addressId) {
-        User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new NotFoundException("User not found"));
-
-        Address address = addressRepository.findById(addressId)
-                        .orElseThrow(() -> new NotFoundException("Address not found"));
-
-        if(!address.getUser().getId().equals(user.getId())) {
-            throw new UnauthorizedException("This address does not belong to the user.");
-        }
-
+        User user = findUserById(userId);
+        Address address = findAddressById(addressId);
+        checkOwnership(address, user);
         addressRepository.deleteById(addressId);
     }
 
     public AddressDTO findById(Long userId, Long addressId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        Address address = addressRepository.findById(addressId)
-                .orElseThrow(() -> new NotFoundException("Address not found"));
-
-        if(!address.getUser().getId().equals(user.getId())) {
-            throw new UnauthorizedException("This address does not belong to the user.");
-        }
-
+        User user = findUserById(userId);
+        Address address = findAddressById(addressId);
+        checkOwnership(address, user);
         return addressMapper.toDTO(address);
     }
 
     public List<AddressDTO> getAddressesByUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Address not found"));
-
+        User user = findUserById(userId);
         return user.getAddresses().stream()
                 .map(addressMapper::toDTO)
                 .toList();
     }
 
     @Transactional
-    public AddressDTO updateAddress(Long userId, UpdateAddressDTO newAddress, Long addressId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+    public AddressDTO updateAddress(Long userId, UpdateAddressDTO dto, Long addressId) {
+        User user = findUserById(userId);
+        Address address = findAddressById(addressId);
+        checkOwnership(address, user);
 
-        Address address = addressRepository.findById(addressId)
-                .orElseThrow(() -> new NotFoundException("Address not found"));
-
-        if(!address.getUser().getId().equals(user.getId())) {
-            throw new UnauthorizedException("This address does not belong to the user.");
-        }
-
-        address.setCity(newAddress.city());
-        address.setStreet(newAddress.street());
-        address.setNumber(newAddress.number());
+        address.setCity(dto.city());
+        address.setStreet(dto.street());
+        address.setNumber(dto.number());
 
         addressRepository.save(address);
         return addressMapper.toDTO(address);
+    }
+
+    private User findUserById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private Address findAddressById(Long addressId){
+        return addressRepository.findById(addressId)
+                .orElseThrow(() -> new NotFoundException("Address not found"));
+    }
+
+    private void checkOwnership(Address address, User user) {
+        if(!address.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedException("This address does not belong to the user.");
+        }
     }
 }
