@@ -5,16 +5,16 @@ import jakarta.validation.constraints.Pattern;
 
 public record CreateAddressDTO(
         @NotBlank @Pattern(
-                regexp = "^[a-zA-ZÀ-ú\\s]+$", message = "The city name must contain only letters"
-        ) String city,
+                regexp = "^[a-zA-ZÀ-ú\\s]+$",
+                message = "The city name must contain only letters") String city,
 
         @NotBlank @Pattern(
-                regexp = "^[a-zA-ZÀ-ú\\s]+$", message = "The street name must contain only letters"
-        ) String street,
+                regexp = "^[a-zA-ZÀ-ú\\s]+$",
+                message = "The street name must contain only letters") String street,
 
         @NotBlank @Pattern(
-                regexp = "^[0-9]+$", message = "The house number should contain only numbers."
-        ) String number){
+                regexp = "^[0-9]+$",
+                message = "The house number must contain only digits.") String number) {
 }
 
 
