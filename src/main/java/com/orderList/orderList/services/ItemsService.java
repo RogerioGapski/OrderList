@@ -10,7 +10,7 @@ import com.orderList.orderList.exceptions.customs.BadRequestException;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
 import com.orderList.orderList.repository.OrderRepository;
 import com.orderList.orderList.utils.mapper.ItemsMapper;
-import com.orderList.orderList.repository.ItemsRepository;
+import com.orderList.orderList.repository.ItemRepository;
 import com.orderList.orderList.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import java.util.List;
 public class ItemsService {
 
     private final ProductRepository productRepository;
-    private final ItemsRepository itemsRepository;
+    private final ItemRepository itemRepository;
     private final ItemsMapper itemsMapper;
     private final OrderRepository orderRepository;
 
@@ -33,28 +33,28 @@ public class ItemsService {
                 .orElseThrow(() -> new NotFoundException("Product not found"));
         Item item = itemsMapper.toEntity(dto);
         item.setUnitaryPrice(dto.quantity() * product.getPrice());
-        item.setProducts(itemsRepository.addProduct(product));
-        itemsRepository.save(item);
+        item.setProducts(itemRepository.addProduct(product));
+        itemRepository.save(item);
         return itemsMapper.toDTO(item);
     }
 
     @Transactional
     public void deleteById(Long itemsId){
-        Item item = itemsRepository.findById(itemsId)
+        Item item = itemRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
-        itemsRepository.delete(item);
+        itemRepository.delete(item);
     }
 
     public ItemsDTO findById(Long itemsId){
-        Item item = itemsRepository.findById(itemsId)
+        Item item = itemRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
         return itemsMapper.toDTO(item);
     }
 
     public List<ItemsDTO> findAll(Long userId) {
-        List<Item> items = itemsRepository.findAllByUser(userId);
+        List<Item> items = itemRepository.findAllByUser(userId);
         return items.stream()
                 .map(itemsMapper::toDTO)
                 .toList();
@@ -62,7 +62,7 @@ public class ItemsService {
 
     @Transactional
     public ItemsDTO changeQuantity(Long itemsId, Long productId, Integer quantity){
-        Item item = itemsRepository.findById(itemsId)
+        Item item = itemRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
         Product product = productRepository.findById(productId)
@@ -73,7 +73,7 @@ public class ItemsService {
         item.setUnitaryPrice(item.getUnitaryPrice() + (product.getPrice() * quantity));
 
         productRepository.save(product);
-        itemsRepository.save(item);
+        itemRepository.save(item);
         return itemsMapper.toDTO(item);
     }
 
@@ -99,10 +99,10 @@ public class ItemsService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
 
-        Item item = itemsRepository.findById(itemsId)
+        Item item = itemRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
         item.setOrder(order);
-        itemsRepository.save(item);
+        itemRepository.save(item);
     }
 }

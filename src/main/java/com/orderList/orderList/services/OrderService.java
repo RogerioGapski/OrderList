@@ -9,7 +9,7 @@ import com.orderList.orderList.exceptions.customs.NotFoundException;
 import com.orderList.orderList.model.enums.OrderStatus;
 import com.orderList.orderList.repository.UserRepository;
 import com.orderList.orderList.utils.mapper.OrderMapper;
-import com.orderList.orderList.repository.ItemsRepository;
+import com.orderList.orderList.repository.ItemRepository;
 import com.orderList.orderList.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final UserRepository userRepository;
-    private final ItemsRepository itemsRepository;
+    private final ItemRepository itemRepository;
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
 
@@ -30,7 +30,7 @@ public class OrderService {
         order.setStatus(OrderStatus.PENDING);
         order.setUser(userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found")));
-        orderRepository.addItems(itemsRepository.findAll());
+        orderRepository.addItems(itemRepository.findAll());
         orderRepository.save(order);
         return orderMapper.toDTO(order);
     }
@@ -52,7 +52,7 @@ public class OrderService {
 
     @Transactional
     public void removeItems(Long orderId, Long itemsId) {
-        Item item = itemsRepository.findById(itemsId)
+        Item item = itemRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
         if(item.getOrder() == null || !item.getOrder().getId().equals(orderId)) {
@@ -60,6 +60,6 @@ public class OrderService {
         }
 
         item.setOrder(null);
-        itemsRepository.save(item);
+        itemRepository.save(item);
     }
 }
