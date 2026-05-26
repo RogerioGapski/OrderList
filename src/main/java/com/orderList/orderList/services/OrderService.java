@@ -1,7 +1,7 @@
 package com.orderList.orderList.services;
 
 import com.orderList.orderList.model.dto.request.order.CreateOrderDTO;
-import com.orderList.orderList.model.entities.Items;
+import com.orderList.orderList.model.entities.Item;
 import com.orderList.orderList.model.entities.Order;
 import com.orderList.orderList.model.dto.response.OrderDTO;
 import com.orderList.orderList.exceptions.customs.BadRequestException;
@@ -52,14 +52,14 @@ public class OrderService {
 
     @Transactional
     public void removeItems(Long orderId, Long itemsId) {
-        Items items = itemsRepository.findById(itemsId)
+        Item item = itemsRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
-        if(items.getOrder() == null || !items.getOrder().getId().equals(orderId)) {
+        if(item.getOrder() == null || !item.getOrder().getId().equals(orderId)) {
             throw new BadRequestException("Items does not belong to this Order");
         }
 
-        items.setOrder(null);
-        itemsRepository.save(items);
+        item.setOrder(null);
+        itemsRepository.save(item);
     }
 }

@@ -1,6 +1,5 @@
 package com.orderList.orderList.services;
 
-import com.orderList.orderList.model.dto.request.category.UpdateCategoryDTO;
 import com.orderList.orderList.model.dto.request.product.*;
 import com.orderList.orderList.model.entities.Category;
 import com.orderList.orderList.model.entities.Product;

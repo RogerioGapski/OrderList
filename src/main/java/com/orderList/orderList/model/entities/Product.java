@@ -35,7 +35,7 @@ public class Product implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "items_id")
-    private Items items;
+    private Item item;
 
     @Override
     public boolean equals(Object o) {

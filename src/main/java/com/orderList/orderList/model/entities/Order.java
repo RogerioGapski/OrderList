@@ -46,7 +46,7 @@ public class Order implements Serializable {
     private User user;
 
     @OneToMany(mappedBy = "order")
-    private List<Items> items;
+    private List<Item> items;
 
     @Override
     public boolean equals(Object o) {

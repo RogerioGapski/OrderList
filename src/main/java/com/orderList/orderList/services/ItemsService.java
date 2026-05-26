@@ -2,8 +2,7 @@ package com.orderList.orderList.services;
 
 import com.orderList.orderList.model.dto.request.items.UpdateItemsQuantity;
 import com.orderList.orderList.model.dto.response.ItemsDTO;
-import com.orderList.orderList.model.dto.response.OrderDTO;
-import com.orderList.orderList.model.entities.Items;
+import com.orderList.orderList.model.entities.Item;
 import com.orderList.orderList.model.entities.Order;
 import com.orderList.orderList.model.entities.Product;
 import com.orderList.orderList.model.dto.request.items.CreateItemsDTO;
@@ -32,30 +31,30 @@ public class ItemsService {
     public ItemsDTO createItems(CreateItemsDTO dto, Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
-        Items items = itemsMapper.toEntity(dto);
-        items.setUnitaryPrice(dto.quantity() * product.getPrice());
-        items.setProducts(itemsRepository.addProduct(product));
-        itemsRepository.save(items);
-        return itemsMapper.toDTO(items);
+        Item item = itemsMapper.toEntity(dto);
+        item.setUnitaryPrice(dto.quantity() * product.getPrice());
+        item.setProducts(itemsRepository.addProduct(product));
+        itemsRepository.save(item);
+        return itemsMapper.toDTO(item);
     }
 
     @Transactional
     public void deleteById(Long itemsId){
-        Items items = itemsRepository.findById(itemsId)
+        Item item = itemsRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
-        itemsRepository.delete(items);
+        itemsRepository.delete(item);
     }
 
     public ItemsDTO findById(Long itemsId){
-        Items items = itemsRepository.findById(itemsId)
+        Item item = itemsRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
-        return itemsMapper.toDTO(items);
+        return itemsMapper.toDTO(item);
     }
 
     public List<ItemsDTO> findAll(Long userId) {
-        List<Items> items = itemsRepository.findAllByUser(userId);
+        List<Item> items = itemsRepository.findAllByUser(userId);
         return items.stream()
                 .map(itemsMapper::toDTO)
                 .toList();
@@ -63,19 +62,19 @@ public class ItemsService {
 
     @Transactional
     public ItemsDTO changeQuantity(Long itemsId, Long productId, Integer quantity){
-        Items items = itemsRepository.findById(itemsId)
+        Item item = itemsRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
 
-        items.setQuantity(items.getQuantity() + quantity);
+        item.setQuantity(item.getQuantity() + quantity);
         product.setStock(product.getStock() - quantity);
-        items.setUnitaryPrice(items.getUnitaryPrice() + (product.getPrice() * quantity));
+        item.setUnitaryPrice(item.getUnitaryPrice() + (product.getPrice() * quantity));
 
         productRepository.save(product);
-        itemsRepository.save(items);
-        return itemsMapper.toDTO(items);
+        itemsRepository.save(item);
+        return itemsMapper.toDTO(item);
     }
 
     @Transactional
@@ -100,10 +99,10 @@ public class ItemsService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
 
-        Items items = itemsRepository.findById(itemsId)
+        Item item = itemsRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("Items not found"));
 
-        items.setOrder(order);
-        itemsRepository.save(items);
+        item.setOrder(order);
+        itemsRepository.save(item);
     }
 }

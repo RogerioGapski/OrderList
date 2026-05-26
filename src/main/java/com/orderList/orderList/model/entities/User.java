@@ -2,8 +2,6 @@ package com.orderList.orderList.model.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.io.Serializable;
 import java.util.List;
@@ -38,7 +36,7 @@ public class User implements Serializable {
     private List<Order> orders;
 
     @OneToMany(mappedBy = "user")
-    private List<Items> items;
+    private List<Item> items;
 
     @Override
     public boolean equals(Object o) {

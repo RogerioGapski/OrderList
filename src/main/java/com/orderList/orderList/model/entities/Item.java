@@ -14,7 +14,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "items_table")
-public class Items implements Serializable {
+public class Item implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -28,22 +28,23 @@ public class Items implements Serializable {
     @Column(name = "unitary_price", nullable = false)
     private Double unitaryPrice;
 
-    @OneToMany(mappedBy = "items", cascade = CascadeType.REMOVE)
-    private List<Product> products;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Items items = (Items) o;
-        return Objects.equals(id, items.id);
+        Item item = (Item) o;
+        return Objects.equals(id, item.id);
     }
 
     @Override
