@@ -31,10 +31,11 @@ public class Address implements Serializable {
     private String street;
 
     @Column(nullable = false)
-    @Size(max = 8, message = "The house number should just 10 characters.")
+    @Size(max = 8, message = "The house number must have at most 8 characters.")
     @Pattern(
-            regexp = "^[0-9]+$", message = "The house number must have only 10 characters."
-    ) private String number;
+            regexp = "^[0-9]+$", message = "The house number must contain only digits."
+    )
+    private String number;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
