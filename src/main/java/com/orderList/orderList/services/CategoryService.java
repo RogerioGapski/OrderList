@@ -1,5 +1,6 @@
 package com.orderList.orderList.services;
 
+import com.orderList.orderList.exceptions.customs.AlreadyExistsException;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
 import com.orderList.orderList.model.dto.request.category.CreateCategoryDTO;
 import com.orderList.orderList.model.dto.request.category.UpdateCategoryDTO;
@@ -16,11 +17,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+
     private final CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
 
     @Transactional
     public CategoryDTO createCategory(CreateCategoryDTO dto){
+        if(categoryRepository.existsByName(dto.name())){
+            throw new AlreadyExistsException("Category already exists.");
+        }
         Category category =  categoryMapper.toEntity(dto);
         categoryRepository.save(category);
         return categoryMapper.toDTO(category);
@@ -28,32 +33,33 @@ public class CategoryService {
 
     @Transactional
     public void deleteCategory(Long id){
-        findByIdMethod(id);
+        findCategoryById(id);
         categoryRepository.deleteById(id);
     }
 
     public CategoryDTO findById(Long id){
-        Category category = findByIdMethod(id);
-        return categoryMapper.toDTO(category);
+        return categoryMapper.toDTO(findCategoryById(id));
     }
 
     public List<CategoryDTO> findAll(){
-        List<Category> categories = categoryRepository.findAll();
-        return categories.stream()
+        return categoryRepository.findAll().stream()
                 .map(categoryMapper::toDTO)
                 .toList();
     }
 
     @Transactional
     public CategoryDTO updateCategory(Long id, UpdateCategoryDTO dto){
-        Category category = findByIdMethod(id);
+        Category category = findCategoryById(id);
+        if(categoryRepository.existsByName(dto.name())){
+            throw new AlreadyExistsException("Category name already exists.");
+        }
         category.setName(dto.name());
         categoryRepository.save(category);
         return categoryMapper.toDTO(category);
     }
 
-    public Category findByIdMethod(Long id){
+    public Category findCategoryById(Long id){
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found"));
+                .orElseThrow(() -> new NotFoundException("Category not found."));
     }
 }
