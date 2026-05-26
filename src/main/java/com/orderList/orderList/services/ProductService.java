@@ -19,73 +19,76 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final CategoryService categoryService;
 
     @Transactional
-    public ProductDTO createProduct(CreateProductDTO p) {
-        Product product = productMapper.toEntity(p);
+    public ProductDTO createProduct(CreateProductDTO dto) {
+        Category category = categoryService.findCategoryById(dto.categoryId());
+        Product product = productMapper.toEntity(dto);
+        product.setCategory(category);
         productRepository.save(product);
         return productMapper.toDTO(product);
     }
 
     @Transactional
     public void deleteById(Long id) {
-        Product product = findByIdMethod(id);
+        Product product = findProductById(id);
         productRepository.delete(product);
     }
 
     public ProductDTO findById(Long id) {
-        Product product = findByIdMethod(id);
-        return productMapper.toDTO(product);
+        return productMapper.toDTO(findProductById(id));
     }
 
     public ProductDTO findByName(String name) {
         Product product = productRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
-
         return productMapper.toDTO(product);
     }
 
-    public List<ProductDTO> findByCategory(String category) {
-        List<Product> products =  productRepository.findByCategory(category);
+    public List<ProductDTO> findByCategory(String categoryName) {
+
+        List<Product> products = productRepository.findByCategoryName(categoryName);
         return products.stream()
                 .map(productMapper::toDTO)
                 .toList();
     }
 
     @Transactional
-    public ProductDTO updatePrice(Long id, UpdateProductPrice newPrice) {
-        Product product = findByIdMethod(id);
-        product.setPrice(newPrice.price());
+    public ProductDTO updatePrice(Long id, UpdateProductPrice dto) {
+        Product product = findProductById(id);
+        product.setPrice(dto.price());
         productRepository.save(product);
         return productMapper.toDTO(product);
     }
 
     @Transactional
-    public ProductDTO updateStock(Long id, UpdateProductStock newStock){
-        Product product = findByIdMethod(id);
-        product.setStock(newStock.stock());
+    public ProductDTO updateStock(Long id, UpdateProductStock dto){
+        Product product = findProductById(id);
+        product.setStock(dto.stock());
         productRepository.save(product);
         return productMapper.toDTO(product);
     }
 
     @Transactional
-    public ProductDTO updateName(Long id, UpdateProductName newName) {
-        Product product = findByIdMethod(id);
-        product.setName(newName.name());
+    public ProductDTO updateName(Long id, UpdateProductName dto) {
+        Product product = findProductById(id);
+        product.setName(dto.name());
         productRepository.save(product);
         return productMapper.toDTO(product);
     }
 
     @Transactional
-    public ProductDTO updateCategory(Long id, Category newCategory) {
-        Product product = findByIdMethod(id);
-        product.setCategory(newCategory);
+    public ProductDTO updateCategory(Long id, Long categoryId) {
+        Product product = findProductById(id);
+        Category category = categoryService.findCategoryById(categoryId);
+        product.setCategory(category);
         productRepository.save(product);
         return productMapper.toDTO(product);
     }
 
-    public Product findByIdMethod(Long id){
+    public Product findProductById(Long id){
         return productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product not found"));
+                .orElseThrow(() -> new NotFoundException("Product not found."));
     }
 }
