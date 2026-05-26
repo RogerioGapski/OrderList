@@ -5,5 +5,6 @@ import jakarta.validation.constraints.Pattern;
 
 public record CreateCategoryDTO(
         @NotBlank @Pattern(
-                regexp = "^[a-zA-ZÀ-ú\\s]+$") String category) {
+                regexp = "^[a-zA-ZÀ-ú\\s]+$",
+                message = "The category name must contain only letters.") String name) {
 }
