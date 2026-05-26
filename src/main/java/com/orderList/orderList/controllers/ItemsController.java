@@ -1,6 +1,6 @@
 package com.orderList.orderList.controllers;
 
-import com.orderList.orderList.model.dto.request.items.CreateItemsDTO;
+import com.orderList.orderList.model.dto.request.items.CreateItemDTO;
 import com.orderList.orderList.model.dto.request.items.UpdateItemsQuantity;
 import com.orderList.orderList.model.dto.response.ItemsDTO;
 import com.orderList.orderList.services.ItemsService;
@@ -23,7 +23,7 @@ public class ItemsController {
     @PostMapping("/{productId}")
     public ResponseEntity<ItemsDTO> createItems(
             @PathVariable Long productId,
-            @RequestBody @Valid CreateItemsDTO dto
+            @RequestBody @Valid CreateItemDTO dto
     ){
         ItemsDTO items = itemsService.createItems(dto, productId);
         URI uri = ServletUriComponentsBuilder

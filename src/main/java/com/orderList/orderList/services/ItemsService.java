@@ -1,11 +1,11 @@
 package com.orderList.orderList.services;
 
+import com.orderList.orderList.model.dto.request.items.CreateItemDTO;
 import com.orderList.orderList.model.dto.request.items.UpdateItemsQuantity;
 import com.orderList.orderList.model.dto.response.ItemsDTO;
 import com.orderList.orderList.model.entities.Item;
 import com.orderList.orderList.model.entities.Order;
 import com.orderList.orderList.model.entities.Product;
-import com.orderList.orderList.model.dto.request.items.CreateItemsDTO;
 import com.orderList.orderList.exceptions.customs.BadRequestException;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
 import com.orderList.orderList.repository.OrderRepository;
@@ -28,7 +28,7 @@ public class ItemsService {
     private final OrderRepository orderRepository;
 
     @Transactional
-    public ItemsDTO createItems(CreateItemsDTO dto, Long productId) {
+    public ItemsDTO createItems(CreateItemDTO dto, Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
         Item item = itemsMapper.toEntity(dto);
