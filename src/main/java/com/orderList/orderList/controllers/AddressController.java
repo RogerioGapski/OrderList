@@ -15,56 +15,50 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("address")
+@RequestMapping("/users/{userId}/addresses")
 public class AddressController {
 
     private final AddressService addressService;
 
-    @PostMapping("/{userId}")
+    @PostMapping
     public ResponseEntity<AddressDTO> createAddress(
             @PathVariable Long userId,
-            @RequestBody @Valid CreateAddressDTO dto
-    ){
+            @RequestBody @Valid CreateAddressDTO dto) {
         AddressDTO address = addressService.createAddress(dto, userId);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(address.id())
                 .toUri();
-
         return ResponseEntity.created(uri).body(address);
     }
 
-    @DeleteMapping("/{userId}/{addressId}")
+    @DeleteMapping("/{addressId}")
     public ResponseEntity<Void> deleteAddress(
             @PathVariable Long userId,
-            @PathVariable Long addressId
-    ){
+            @PathVariable Long addressId) {
         addressService.deleteById(userId, addressId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{userId}/{addressId}")
+    @GetMapping("/{addressId}")
     public ResponseEntity<AddressDTO> findById(
             @PathVariable Long userId,
-            @PathVariable Long addressId
-    ){
+            @PathVariable Long addressId) {
         return ResponseEntity.ok().body(addressService.findById(userId, addressId));
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping
     public ResponseEntity<List<AddressDTO>> findAddresses(
-            @PathVariable Long userId
-    ){
+            @PathVariable Long userId) {
         return ResponseEntity.ok().body(addressService.getAddressesByUser(userId));
     }
 
-    @PutMapping("/{userId}/{addressId}")
+    @PutMapping("/{addressId}")
     public ResponseEntity<AddressDTO> updateAddress(
             @PathVariable Long userId,
             @PathVariable Long addressId,
-            @RequestBody @Valid UpdateAddressDTO newAddress
-    ){
-        return ResponseEntity.ok().body(addressService.updateAddress(userId, newAddress, addressId));
+            @RequestBody @Valid UpdateAddressDTO dto) {
+        return ResponseEntity.ok().body(addressService.updateAddress(userId, dto, addressId));
     }
 }
