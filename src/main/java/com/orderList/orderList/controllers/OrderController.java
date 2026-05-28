@@ -3,6 +3,7 @@ package com.orderList.orderList.controllers;
 import com.orderList.orderList.model.dto.request.order.CreateOrderDTO;
 import com.orderList.orderList.model.dto.response.OrderDTO;
 import com.orderList.orderList.services.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,46 +13,46 @@ import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/order")
+@RequestMapping("/users/{userId}/orders")
 public class OrderController {
+
     private final OrderService orderService;
 
-    @PostMapping("/{userId}")
+    @PostMapping
     public ResponseEntity<OrderDTO> createOrder(
             @PathVariable Long userId,
-            @RequestBody CreateOrderDTO dto
-    ){
+            @RequestBody @Valid CreateOrderDTO dto) {
         OrderDTO order = orderService.createOrder(dto, userId);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{orderId}")
+                .path("/{id}")
                 .buildAndExpand(order.id())
                 .toUri();
-
         return ResponseEntity.created(uri).body(order);
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/{orderId}")
     public ResponseEntity<Void> deleteOrder(
-            @PathVariable Long orderId
-    ){
-        orderService.deleteById(orderId);
+            @PathVariable Long userId,
+            @PathVariable Long orderId) {
+        orderService.deleteById(orderId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDTO> getOrder(
-            @PathVariable Long orderId
-    ){
-        return ResponseEntity.ok().body(orderService.findById(orderId));
+    public ResponseEntity<OrderDTO> findById(
+            @PathVariable Long userId,
+            @PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.findById(orderId, userId));
     }
 
-    @PatchMapping("/remove/{orderId}/{itemsId}")
-    public ResponseEntity<Void> addItems(
+    @DeleteMapping("/{orderId}/items/{itemId}")
+    public ResponseEntity<Void> removeItem(
+            @PathVariable Long userId,
             @PathVariable Long orderId,
-            @PathVariable Long itemsId
-    ){
-        orderService.removeItems(orderId, itemsId);
+            @PathVariable Long itemId) {
+        orderService.removeItem(orderId, itemId, userId);
         return ResponseEntity.noContent().build();
     }
 }
+

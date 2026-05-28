@@ -15,74 +15,67 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/items")
+@RequestMapping("/users/{userId}/items")
 public class ItemController {
 
     private final ItemService itemService;
 
-    @PostMapping("/{productId}")
-    public ResponseEntity<ItemDTO> createItems(
+    @PostMapping("/product/{productId}")
+    public ResponseEntity<ItemDTO> createItem(
+            @PathVariable Long userId,
             @PathVariable Long productId,
-            @RequestBody @Valid CreateItemDTO dto
-    ){
-        ItemDTO items = itemService.createItems(dto, productId);
+            @RequestBody @Valid CreateItemDTO dto) {
+        ItemDTO item = itemService.createItem(dto, productId, userId);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(items.id())
+                .buildAndExpand(item.id())
                 .toUri();
-
-        return ResponseEntity.created(uri).body(items);
+        return ResponseEntity.created(uri).body(item);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteItems(
-            @PathVariable Long id
-    ){
-        itemService.deleteById(id);
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity<Void> deleteItem(
+            @PathVariable Long userId,
+            @PathVariable Long itemId) {
+        itemService.deleteById(itemId, userId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ItemDTO> getById(
-            @PathVariable Long id
-    ){
-        return ResponseEntity.ok().body(itemService.findById(id));
+    @GetMapping("/{itemId}")
+    public ResponseEntity<ItemDTO> findById(
+            @PathVariable Long userId,
+            @PathVariable Long itemId) {
+        return ResponseEntity.ok(itemService.findById(itemId, userId));
     }
 
-    @GetMapping("/all/{userId}")
-    public ResponseEntity<List<ItemDTO>> getAll(
-            @PathVariable Long userId
-    ){
-        return ResponseEntity.ok().body(itemService.findAll(userId));
+    @GetMapping
+    public ResponseEntity<List<ItemDTO>> findAll(@PathVariable Long userId) {
+        return ResponseEntity.ok(itemService.findAll(userId));
     }
 
-    @PatchMapping("/increase/{itemId}/{productId}")
+    @PatchMapping("/{itemId}/increase")
     public ResponseEntity<ItemDTO> increaseQuantity(
-            @PathVariable Long itemsId,
-            @PathVariable Long productId,
-            @RequestBody @Valid UpdateItemQuantity increase
-            ){
-        return ResponseEntity.ok()
-                .body(itemService.increaseQuantity(itemsId, productId, increase));
+            @PathVariable Long userId,
+            @PathVariable Long itemId,
+            @RequestBody @Valid UpdateItemQuantity dto) {
+        return ResponseEntity.ok(itemService.increaseQuantity(itemId, userId, dto));
     }
 
-    @PatchMapping("/decrease/{itemId}/{productId}")
+    @PatchMapping("/{itemId}/decrease")
     public ResponseEntity<ItemDTO> decreaseQuantity(
-            @PathVariable Long itemsId,
-            @PathVariable Long productId,
-            @RequestBody @Valid UpdateItemQuantity decrease
-    ){
-        return ResponseEntity.ok()
-                .body(itemService.decreaseQuantity(itemsId, productId, decrease));
+            @PathVariable Long userId,
+            @PathVariable Long itemId,
+            @RequestBody @Valid UpdateItemQuantity dto) {
+        return ResponseEntity.ok(itemService.decreaseQuantity(itemId, userId, dto));
     }
 
-    @PatchMapping("/add/{itemId}/{orderId}")
+    @PatchMapping("/{itemId}/order/{orderId}")
     public ResponseEntity<Void> addToOrder(
-            @PathVariable Long itemsId,
-            @PathVariable Long orderId
-    ){
-        itemService.addToOrder(itemsId, orderId);
+            @PathVariable Long userId,
+            @PathVariable Long itemId,
+            @PathVariable Long orderId) {
+        itemService.addToOrder(itemId, orderId, userId);
         return ResponseEntity.noContent().build();
     }
 }

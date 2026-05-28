@@ -31,7 +31,7 @@ public class ItemService {
     private final UserService userService;
 
     @Transactional
-    public ItemDTO createItems(CreateItemDTO dto, Long productId, Long userId) {
+    public ItemDTO createItem(CreateItemDTO dto, Long productId, Long userId) {
         Product product = findProductById(productId);
         if(product.getStock() < dto.quantity()){
             throw new BadRequestException("Insufficient stock for this product.");

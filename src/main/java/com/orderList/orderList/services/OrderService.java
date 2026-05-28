@@ -68,7 +68,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void removeItems(Long orderId, Long itemId, Long userId) {
+    public void removeItem(Long orderId, Long itemId, Long userId) {
         Order order = findOrderById(orderId);
         checkOwnership(order, userId);
 
