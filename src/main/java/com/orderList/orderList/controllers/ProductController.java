@@ -2,7 +2,6 @@ package com.orderList.orderList.controllers;
 
 import com.orderList.orderList.model.dto.request.product.*;
 import com.orderList.orderList.model.dto.response.ProductDTO;
-import com.orderList.orderList.model.entities.Category;
 import com.orderList.orderList.services.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,82 +14,70 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
+
     private final ProductService productService;
 
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(
-            @RequestBody @Valid CreateProductDTO productDTO
-    ){
-        ProductDTO product = productService.createProduct(productDTO);
+            @RequestBody @Valid CreateProductDTO dto) {
+        ProductDTO product = productService.createProduct(dto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(product.id())
                 .toUri();
-
         return ResponseEntity.created(uri).body(product);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(
-            @PathVariable Long id
-    ){
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> getById(
-            @PathVariable Long id
-    ){
-        return ResponseEntity.ok().body(productService.findById(id));
+    public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.findById(id));
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<ProductDTO> getByName(
-            @PathVariable String name
-    ){
-        return ResponseEntity.ok().body(productService.findByName(name));
+    public ResponseEntity<ProductDTO> findByName(@PathVariable String name) {
+        return ResponseEntity.ok(productService.findByName(name));
     }
 
-    @GetMapping("/products/{category}")
-    public ResponseEntity<List<ProductDTO>> getByCategory(
-            @PathVariable String category
-    ){
-        return ResponseEntity.ok().body(productService.findByCategory(category));
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<List<ProductDTO>> findByCategory(
+            @PathVariable String categoryName) {
+        return ResponseEntity.ok(productService.findByCategory(categoryName));
     }
 
-    @PatchMapping("/price/{id}")
+    @PatchMapping("/{id}/price")
     public ResponseEntity<ProductDTO> updatePrice(
             @PathVariable Long id,
-            @RequestBody @Valid UpdateProductPrice newPrice
-    ){
-        return ResponseEntity.ok().body(productService.updatePrice(id, newPrice));
+            @RequestBody @Valid UpdateProductPrice dto) {
+        return ResponseEntity.ok(productService.updatePrice(id, dto));
     }
 
-    @PatchMapping("/stock/{id}")
+    @PatchMapping("/{id}/stock")
     public ResponseEntity<ProductDTO> updateStock(
             @PathVariable Long id,
-            @RequestBody @Valid UpdateProductStock newStock
-    ){
-        return ResponseEntity.ok().body(productService.updateStock(id, newStock));
+            @RequestBody @Valid UpdateProductStock dto) {
+        return ResponseEntity.ok(productService.updateStock(id, dto));
     }
 
-    @PatchMapping("/product/{id}")
+    @PatchMapping("/{id}/name")
     public ResponseEntity<ProductDTO> updateName(
             @PathVariable Long id,
-            @RequestBody @Valid UpdateProductName newName
-    ){
-        return ResponseEntity.ok().body(productService.updateName(id, newName));
+            @RequestBody @Valid UpdateProductName dto) {
+        return ResponseEntity.ok(productService.updateName(id, dto));
     }
 
-    @PatchMapping("/category/{id}")
+    @PatchMapping("/{id}/category")
     public ResponseEntity<ProductDTO> updateCategory(
             @PathVariable Long id,
-            @RequestBody @Valid Category newCategory
-    ){
-        return ResponseEntity.ok().body(productService.updateCategory(id, newCategory));
+            @RequestParam Long categoryId) {
+        return ResponseEntity.ok(productService.updateCategory(id, categoryId));
     }
 }
