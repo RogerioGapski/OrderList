@@ -9,7 +9,6 @@ import com.orderList.orderList.exceptions.customs.BadRequestException;
 import com.orderList.orderList.exceptions.customs.NotFoundException;
 import com.orderList.orderList.model.entities.User;
 import com.orderList.orderList.model.enums.OrderStatus;
-import com.orderList.orderList.repository.UserRepository;
 import com.orderList.orderList.utils.mapper.OrderMapper;
 import com.orderList.orderList.repository.ItemRepository;
 import com.orderList.orderList.repository.OrderRepository;
@@ -36,7 +35,7 @@ public class OrderService {
                 .toList();
 
         if(pendingItems.isEmpty()){
-            throw new BadRequestException("No items avaliable to create and order.")
+            throw new BadRequestException("No items avaliable to create and order.");
         }
 
         double total = pendingItems.stream()

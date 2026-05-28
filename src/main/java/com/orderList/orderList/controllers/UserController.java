@@ -15,72 +15,49 @@ import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(
-            @RequestBody @Valid CreateUserDTO userDTO
-    ){
-        UserDTO user = userService.createUser(userDTO);
+    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid CreateUserDTO dto) {
+        UserDTO user = userService.createUser(dto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(user.id())
                 .toUri();
-
         return ResponseEntity.created(uri).body(user);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(
-            @PathVariable Long userId
-    ){
-        userService.deleteById(userId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/email/{email}")
-    public ResponseEntity<Void> deleteByEmail(
-            @PathVariable String email
-    ){
-        userService.deleteByEmail(email);
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        userService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> findById(
-            @PathVariable Long id
-    ){
-        UserDTO dto = userService.findById(id);
-        return ResponseEntity.ok().body(dto);
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(userService.findById(id));
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<UserDTO> findByEmail(
-            @PathVariable String email
-    ){
-        UserDTO dto = userService.findByEmail(email);
-        return ResponseEntity.ok().body(dto);
+    public ResponseEntity<UserDTO> findByEmail(@PathVariable String email) {
+        return ResponseEntity.ok().body(userService.findByEmail(email));
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/name")
     public ResponseEntity<UserDTO> updateName(
             @PathVariable Long id,
-            @RequestBody @Valid UpdateNameDTO changeName
-    ){
-        UserDTO dto = userService.changeName(id, changeName.name());
-        return ResponseEntity.ok().body(dto);
+            @RequestBody @Valid UpdateNameDTO dto) {
+        return ResponseEntity.ok().body(userService.changeName(id, dto.name()));
     }
 
-    @PatchMapping("/email/{email}")
+    @PatchMapping("/{id}/email")
     public ResponseEntity<UserDTO> updateEmail(
-        @PathVariable String email,
-        @RequestBody @Valid UpdateEmailDTO changeEmail
-    ){
-        UserDTO dto = userService.changeEmail(email, changeEmail.email());
-        return ResponseEntity.ok().body(dto);
+        @PathVariable Long id,
+        @RequestBody @Valid UpdateEmailDTO dto) {
+        return ResponseEntity.ok().body(userService.changeEmail(id, dto.email()));
     }
 }
