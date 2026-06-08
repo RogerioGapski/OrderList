@@ -13,13 +13,13 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "product_category")
+@Table(name = "categories")
 public class Category implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id", nullable = false,  updatable = false)
+    @Column(name = "category_id", nullable = false, unique = true, updatable = false)
     private Long id;
 
     @Column(nullable = false, unique = true)

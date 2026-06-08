@@ -17,7 +17,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "orders_table")
+@Table(name = "orders")
 public class Order implements Serializable {
     private static final long serialVersionUID = 1L;
 

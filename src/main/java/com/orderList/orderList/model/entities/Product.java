@@ -12,13 +12,13 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "products_table")
+@Table(name = "products")
 public class Product implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id", nullable = false, unique = true, insertable = false)
+    @Column(name = "product_id", nullable = false, unique = true, updatable = false)
     private Long id;
 
     @Column(name = "product_name", nullable = false)
