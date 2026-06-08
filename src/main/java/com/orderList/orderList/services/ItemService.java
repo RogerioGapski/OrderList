@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class ItemService {
     private final UserService userService;
 
     @Transactional
-    public ItemDTO createItem(CreateItemDTO dto, Long productId, Long userId) {
+    public ItemDTO createItem(CreateItemDTO dto, Long productId, UUID userId) {
         Product product = findProductById(productId);
         if(product.getStock() < dto.quantity()){
             throw new BadRequestException("Insufficient stock for this product.");
@@ -52,7 +53,7 @@ public class ItemService {
     }
 
     @Transactional
-    public void deleteById(Long itemId, Long userId){
+    public void deleteById(Long itemId, UUID userId){
         Item item = findItemById(itemId);
         checkOwnership(item, userId);
 
@@ -63,20 +64,20 @@ public class ItemService {
         itemRepository.delete(item);
     }
 
-    public ItemDTO findById(Long itemId, Long userId){
+    public ItemDTO findById(Long itemId, UUID userId){
         Item item = findItemById(itemId);
         checkOwnership(item, userId);
         return itemMapper.toDTO(item);
     }
 
-    public List<ItemDTO> findAll(Long userId) {
+    public List<ItemDTO> findAll(UUID userId) {
         return itemRepository.findAllByUserId(userId).stream()
                 .map(itemMapper::toDTO)
                 .toList();
     }
 
     @Transactional
-    public ItemDTO increaseQuantity(Long itemId, Long userId, UpdateItemQuantity dto) {
+    public ItemDTO increaseQuantity(Long itemId, UUID userId, UpdateItemQuantity dto) {
         Item item = findItemById(itemId);
         checkOwnership(item, userId);
         Product product = item.getProduct();
@@ -95,7 +96,7 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemDTO decreaseQuantity(Long itemId, Long userId, UpdateItemQuantity dto){
+    public ItemDTO decreaseQuantity(Long itemId, UUID userId, UpdateItemQuantity dto){
         Item item = findItemById(itemId);
         checkOwnership(item, userId);
         Product product = item.getProduct();
@@ -114,7 +115,7 @@ public class ItemService {
     }
 
     @Transactional
-    public void addToOrder(Long itemId, Long orderId, Long userId) {
+    public void addToOrder(Long itemId, Long orderId, UUID userId) {
         Item item = findItemById(itemId);
         checkOwnership(item, userId);
 
@@ -139,7 +140,7 @@ public class ItemService {
                 .orElseThrow(() -> new NotFoundException("Product not found."));
     }
 
-    private void checkOwnership(Item item, Long userId){
+    private void checkOwnership(Item item, UUID userId){
         if(!item.getUser().getId().equals(userId)){
             throw new UnauthorizedException("Item does not belong to this user.");
         }

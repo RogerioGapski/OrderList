@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderDTO> createOrder(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @RequestBody @Valid CreateOrderDTO dto) {
         OrderDTO order = orderService.createOrder(dto, userId);
         URI uri = ServletUriComponentsBuilder
@@ -33,7 +34,7 @@ public class OrderController {
 
     @DeleteMapping("/{orderId}")
     public ResponseEntity<Void> deleteOrder(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long orderId) {
         orderService.deleteById(orderId, userId);
         return ResponseEntity.noContent().build();
@@ -41,14 +42,14 @@ public class OrderController {
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDTO> findById(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.findById(orderId, userId));
     }
 
     @DeleteMapping("/{orderId}/items/{itemId}")
     public ResponseEntity<Void> removeItem(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long orderId,
             @PathVariable Long itemId) {
         orderService.removeItem(orderId, itemId, userId);

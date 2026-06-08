@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class AddressController {
 
     @PostMapping
     public ResponseEntity<AddressDTO> createAddress(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @RequestBody @Valid CreateAddressDTO dto) {
         AddressDTO address = addressService.createAddress(dto, userId);
         URI uri = ServletUriComponentsBuilder
@@ -35,7 +36,7 @@ public class AddressController {
 
     @DeleteMapping("/{addressId}")
     public ResponseEntity<Void> deleteAddress(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long addressId) {
         addressService.deleteById(userId, addressId);
         return ResponseEntity.noContent().build();
@@ -43,20 +44,20 @@ public class AddressController {
 
     @GetMapping("/{addressId}")
     public ResponseEntity<AddressDTO> findById(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long addressId) {
         return ResponseEntity.ok().body(addressService.findById(userId, addressId));
     }
 
     @GetMapping
     public ResponseEntity<List<AddressDTO>> findAddresses(
-            @PathVariable Long userId) {
+            @PathVariable UUID userId) {
         return ResponseEntity.ok().body(addressService.getAddressesByUser(userId));
     }
 
     @PutMapping("/{addressId}")
     public ResponseEntity<AddressDTO> updateAddress(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long addressId,
             @RequestBody @Valid UpdateAddressDTO dto) {
         return ResponseEntity.ok().body(addressService.updateAddress(userId, dto, addressId));

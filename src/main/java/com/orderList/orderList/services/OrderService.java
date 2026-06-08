@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     @Transactional
-    public OrderDTO createOrder(CreateOrderDTO dto, Long userId) {
+    public OrderDTO createOrder(CreateOrderDTO dto, UUID userId) {
         User user = userService.findUserById(userId);
         List<Item> pendingItems = itemRepository.findAllByUserId(userId).stream()
                 .filter(i -> i.getOrder() == null)
@@ -55,20 +56,20 @@ public class OrderService {
     }
 
     @Transactional
-    public void deleteById(Long orderId, Long userId) {
+    public void deleteById(Long orderId, UUID userId) {
         Order order = findOrderById(orderId);
         checkOwnership(order, userId);
         orderRepository.delete(order);
     }
 
-    public OrderDTO findById(Long orderId, Long userId) {
+    public OrderDTO findById(Long orderId, UUID userId) {
         Order order = findOrderById(orderId);
         checkOwnership(order, userId);
         return orderMapper.toDTO(order);
     }
 
     @Transactional
-    public void removeItem(Long orderId, Long itemId, Long userId) {
+    public void removeItem(Long orderId, Long itemId, UUID userId) {
         Order order = findOrderById(orderId);
         checkOwnership(order, userId);
 
@@ -88,7 +89,7 @@ public class OrderService {
                 .orElseThrow(() -> new NotFoundException("Order not found"));
     }
 
-    private void checkOwnership(Order order, Long userId){
+    private void checkOwnership(Order order, UUID userId){
         if(!order.getUser().getId().equals(userId)){
             throw new UnauthorizedException("Order does not belong to this user.");
         }

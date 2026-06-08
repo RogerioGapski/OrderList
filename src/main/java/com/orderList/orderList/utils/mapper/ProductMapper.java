@@ -12,6 +12,6 @@ public interface ProductMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "category", ignore = true)
-    @Mapping(target = "items", ignore = true)
+    @Mapping(target = "item", ignore = true)
     Product toEntity(CreateProductDTO dto);
 }

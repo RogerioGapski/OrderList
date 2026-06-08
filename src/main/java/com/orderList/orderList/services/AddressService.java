@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class AddressService {
     private final UserRepository userRepository;
 
     @Transactional
-    public AddressDTO createAddress(CreateAddressDTO dto, Long userId) {
+    public AddressDTO createAddress(CreateAddressDTO dto, UUID userId) {
         User user = findUserById(userId);
         Address address = addressMapper.toEntity(dto);
         address.setUser(user);
@@ -34,21 +35,21 @@ public class AddressService {
     }
 
     @Transactional
-    public void deleteById(Long userId, Long addressId) {
+    public void deleteById(UUID userId, Long addressId) {
         User user = findUserById(userId);
         Address address = findAddressById(addressId);
         checkOwnership(address, user);
         addressRepository.deleteById(addressId);
     }
 
-    public AddressDTO findById(Long userId, Long addressId) {
+    public AddressDTO findById(UUID userId, Long addressId) {
         User user = findUserById(userId);
         Address address = findAddressById(addressId);
         checkOwnership(address, user);
         return addressMapper.toDTO(address);
     }
 
-    public List<AddressDTO> getAddressesByUser(Long userId) {
+    public List<AddressDTO> getAddressesByUser(UUID userId) {
         User user = findUserById(userId);
         return user.getAddresses().stream()
                 .map(addressMapper::toDTO)
@@ -56,7 +57,7 @@ public class AddressService {
     }
 
     @Transactional
-    public AddressDTO updateAddress(Long userId, UpdateAddressDTO dto, Long addressId) {
+    public AddressDTO updateAddress(UUID userId, UpdateAddressDTO dto, Long addressId) {
         User user = findUserById(userId);
         Address address = findAddressById(addressId);
         checkOwnership(address, user);
@@ -69,7 +70,7 @@ public class AddressService {
         return addressMapper.toDTO(address);
     }
 
-    private User findUserById(Long userId){
+    private User findUserById(UUID userId){
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }

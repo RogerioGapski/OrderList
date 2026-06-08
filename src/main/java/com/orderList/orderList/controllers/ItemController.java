@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class ItemController {
 
     @PostMapping("/product/{productId}")
     public ResponseEntity<ItemDTO> createItem(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long productId,
             @RequestBody @Valid CreateItemDTO dto) {
         ItemDTO item = itemService.createItem(dto, productId, userId);
@@ -36,7 +37,7 @@ public class ItemController {
 
     @DeleteMapping("/{itemId}")
     public ResponseEntity<Void> deleteItem(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long itemId) {
         itemService.deleteById(itemId, userId);
         return ResponseEntity.noContent().build();
@@ -44,19 +45,19 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemDTO> findById(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long itemId) {
         return ResponseEntity.ok(itemService.findById(itemId, userId));
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDTO>> findAll(@PathVariable Long userId) {
+    public ResponseEntity<List<ItemDTO>> findAll(@PathVariable UUID userId) {
         return ResponseEntity.ok(itemService.findAll(userId));
     }
 
     @PatchMapping("/{itemId}/increase")
     public ResponseEntity<ItemDTO> increaseQuantity(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long itemId,
             @RequestBody @Valid UpdateItemQuantity dto) {
         return ResponseEntity.ok(itemService.increaseQuantity(itemId, userId, dto));
@@ -64,7 +65,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}/decrease")
     public ResponseEntity<ItemDTO> decreaseQuantity(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long itemId,
             @RequestBody @Valid UpdateItemQuantity dto) {
         return ResponseEntity.ok(itemService.decreaseQuantity(itemId, userId, dto));
@@ -72,7 +73,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}/order/{orderId}")
     public ResponseEntity<Void> addToOrder(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable Long itemId,
             @PathVariable Long orderId) {
         itemService.addToOrder(itemId, orderId, userId);

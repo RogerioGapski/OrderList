@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -30,18 +32,12 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteById(Long id){
+    public void deleteById(UUID id){
         User user = findUserById(id);
         userRepository.delete(user);
     }
 
-    @Transactional
-    public void deleteByEmail(String email){
-        User user = findUserByEmail(email);
-        userRepository.delete(user);
-    }
-
-    public UserDTO findById(Long id){
+    public UserDTO findById(UUID id){
         return userMapper.toDTO(findUserById(id));
     }
 
@@ -50,7 +46,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO changeName(Long id, String newName){
+    public UserDTO changeName(UUID id, String newName){
         User user = findUserById(id);
         user.setName(newName);
         userRepository.save(user);
@@ -58,7 +54,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO changeEmail(Long id, String newEmail) {
+    public UserDTO changeEmail(UUID id, String newEmail) {
         if(userRepository.existsByEmail(newEmail)){
             throw new AlreadyExistsException("Email already in use.");
         }
@@ -68,7 +64,7 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public User findUserById(Long id){
+    public User findUserById(UUID id){
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,13 +33,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> findById(@PathVariable UUID id) {
         return ResponseEntity.ok().body(userService.findById(id));
     }
 
@@ -49,14 +50,14 @@ public class UserController {
 
     @PatchMapping("/{id}/name")
     public ResponseEntity<UserDTO> updateName(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @RequestBody @Valid UpdateNameDTO dto) {
         return ResponseEntity.ok().body(userService.changeName(id, dto.name()));
     }
 
     @PatchMapping("/{id}/email")
     public ResponseEntity<UserDTO> updateEmail(
-        @PathVariable Long id,
+        @PathVariable UUID id,
         @RequestBody @Valid UpdateEmailDTO dto) {
         return ResponseEntity.ok().body(userService.changeEmail(id, dto.email()));
     }
