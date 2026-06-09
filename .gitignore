@@ -37,3 +37,5 @@ mvnw.cmd
 .idea/
 .mvn/
 .gitattributes
+src/main/resources/app.key
+src/main/resources/app.pub

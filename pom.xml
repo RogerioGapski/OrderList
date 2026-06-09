@@ -9,7 +9,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.orderList</groupId>
-	<artifactId>OrderList</artifactId>
+	<artifactId>orderList</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
