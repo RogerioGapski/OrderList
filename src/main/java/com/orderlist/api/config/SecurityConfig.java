@@ -41,7 +41,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtDecoder jwtEnconder(){
+    public JwtDecoder jwtDecoder(){
         return NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
 
