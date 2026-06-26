@@ -130,6 +130,7 @@ public class ItemService {
         itemRepository.save(item);
     }
 
+    //Auxiliary methods
     private Item findItemById(Long id){
         return itemRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Item not found."));

@@ -87,6 +87,7 @@ public class ProductService {
         return productMapper.toDTO(product);
     }
 
+    //Auxiliary method
     public Product findProductById(Long id){
         return productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found."));

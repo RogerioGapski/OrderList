@@ -58,16 +58,15 @@ public class UserController {
 
     @PatchMapping("/{id}/email")
     public ResponseEntity<UserDTO> updateEmail(
-        @PathVariable UUID id,
-        @RequestBody @Valid UpdateEmailDTO dto) {
+            @PathVariable UUID id,
+            @RequestBody @Valid UpdateEmailDTO dto) {
         return ResponseEntity.ok().body(userService.changeEmail(id, dto));
     }
 
     @PatchMapping("/{id}/password")
     public ResponseEntity<Void> updatePassword(
             @PathVariable UUID id,
-            @RequestBody @Valid UpdatePasswordDTO dto
-    ){
+            @RequestBody @Valid UpdatePasswordDTO dto) {
         userService.changePassword(id, dto);
         return ResponseEntity.ok().build();
     }

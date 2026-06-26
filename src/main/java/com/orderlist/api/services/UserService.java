@@ -77,6 +77,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    //Auxiliary method
     public User findUserById(UUID id){
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));

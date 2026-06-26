@@ -84,6 +84,7 @@ public class OrderService {
         itemRepository.save(item);
     }
 
+    //Auxiliary methods
     private Order findOrderById(Long id){
         return orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found"));

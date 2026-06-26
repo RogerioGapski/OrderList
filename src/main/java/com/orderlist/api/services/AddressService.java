@@ -70,6 +70,7 @@ public class AddressService {
         return addressMapper.toDTO(address);
     }
 
+    //Auxiliary methods
     private User findUserById(UUID userId){
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
