@@ -3,6 +3,7 @@ package com.orderlist.api.controllers;
 import com.orderlist.api.model.dto.request.user.UpdateEmailDTO;
 import com.orderlist.api.model.dto.request.user.UpdateNameDTO;
 import com.orderlist.api.model.dto.request.user.CreateUserDTO;
+import com.orderlist.api.model.dto.request.user.UpdatePasswordDTO;
 import com.orderlist.api.model.dto.response.UserDTO;
 import com.orderlist.api.services.UserService;
 import jakarta.validation.Valid;
@@ -52,13 +53,22 @@ public class UserController {
     public ResponseEntity<UserDTO> updateName(
             @PathVariable UUID id,
             @RequestBody @Valid UpdateNameDTO dto) {
-        return ResponseEntity.ok().body(userService.changeName(id, dto.name()));
+        return ResponseEntity.ok().body(userService.changeName(id, dto));
     }
 
     @PatchMapping("/{id}/email")
     public ResponseEntity<UserDTO> updateEmail(
         @PathVariable UUID id,
         @RequestBody @Valid UpdateEmailDTO dto) {
-        return ResponseEntity.ok().body(userService.changeEmail(id, dto.email()));
+        return ResponseEntity.ok().body(userService.changeEmail(id, dto));
+    }
+
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<Void> updatePassword(
+            @PathVariable UUID id,
+            @RequestBody @Valid UpdatePasswordDTO dto
+    ){
+        userService.changePassword(id, dto);
+        return ResponseEntity.ok().build();
     }
 }

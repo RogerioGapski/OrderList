@@ -28,7 +28,7 @@ public class Role implements Serializable {
     @ManyToMany
     private User user;
 
-    private enum RoleType {
+    public enum RoleType {
         USER,
         ADMIN
     }
