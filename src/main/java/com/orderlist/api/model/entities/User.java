@@ -1,11 +1,11 @@
 package com.orderlist.api.model.entities;
 
+import com.orderlist.api.model.enums.Roles;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.Serializable;
 import java.util.*;
@@ -22,7 +22,7 @@ public class User implements Serializable, UserDetails {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "user_id", nullable = false, unique = true, updatable = false)
     private UUID id;
 
@@ -44,9 +44,9 @@ public class User implements Serializable, UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
-            name = "tb_users_roles",
+            name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
@@ -69,7 +69,7 @@ public class User implements Serializable, UserDetails {
         return this.roles
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .toList();
+                .collect(Collectors.toSet());
     }
 
     @Override

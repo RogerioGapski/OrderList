@@ -1,6 +1,6 @@
 package com.orderlist.api.controllers;
 
-import com.orderlist.api.model.dto.request.login.LoginRequest;
+import com.orderlist.api.model.dto.request.auth.LoginRequest;
 import com.orderlist.api.model.dto.response.LoginDTO;
 import com.orderlist.api.model.dto.response.UserDTO;
 import com.orderlist.api.services.UserService;
@@ -20,10 +20,4 @@ public class TokenController {
     private final UserService userService;
     private final JwtEncoder jwtEncoder;
     private final BCryptPasswordEncoder passwordEncode;
-
-    @PostMapping("/login")
-    public ResponseEntity<LoginDTO> login(@Valid @RequestBody LoginRequest dto) {
-        UserDTO user = userService.findByEmail(dto.email());
-
-    }
 }

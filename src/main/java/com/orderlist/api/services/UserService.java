@@ -1,11 +1,13 @@
 package com.orderlist.api.services;
 
 import com.orderlist.api.exceptions.customs.AlreadyExistsException;
+import com.orderlist.api.model.dto.request.role.AddRole;
 import com.orderlist.api.model.dto.request.user.UpdateEmailDTO;
 import com.orderlist.api.model.dto.request.user.UpdateNameDTO;
 import com.orderlist.api.model.dto.request.user.UpdatePasswordDTO;
+import com.orderlist.api.model.entities.Role;
 import com.orderlist.api.model.entities.User;
-import com.orderlist.api.model.dto.request.user.CreateUserDTO;
+import com.orderlist.api.model.dto.request.auth.RegisterRequest;
 import com.orderlist.api.model.dto.response.UserDTO;
 import com.orderlist.api.exceptions.customs.NotFoundException;
 import com.orderlist.api.utils.mapper.UserMapper;
@@ -25,16 +27,14 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
-    public UserDTO createUser(CreateUserDTO dto) {
+    public User createUser(RegisterRequest dto) {
         if(userRepository.existsByEmail(dto.email())){
             throw new AlreadyExistsException("Email already in use.");
         }
 
         User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return userMapper.toDTO(user);
+        return user;
     }
 
     @Transactional
@@ -86,5 +86,12 @@ public class UserService {
     public User findUserByEmail(String email){
         return  userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    @Transactional
+    public void addRole(UUID id, AddRole role){
+        User user = findUserById(id);
+        user.getRoles().add(role.role());
+        userRepository.save(user);
     }
 }

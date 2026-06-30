@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,8 +26,8 @@ public class Role implements Serializable {
     @Column(name = "role_name", nullable = false, unique = true)
     private RoleType name;
 
-    @ManyToMany
-    private User user;
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
     public enum RoleType {
         USER,

@@ -2,7 +2,6 @@ package com.orderlist.api.controllers;
 
 import com.orderlist.api.model.dto.request.user.UpdateEmailDTO;
 import com.orderlist.api.model.dto.request.user.UpdateNameDTO;
-import com.orderlist.api.model.dto.request.user.CreateUserDTO;
 import com.orderlist.api.model.dto.request.user.UpdatePasswordDTO;
 import com.orderlist.api.model.dto.response.UserDTO;
 import com.orderlist.api.services.UserService;
@@ -10,9 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -21,17 +18,6 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-
-    @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody @Valid CreateUserDTO dto) {
-        UserDTO user = userService.createUser(dto);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(user.id())
-                .toUri();
-        return ResponseEntity.created(uri).body(user);
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {

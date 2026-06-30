@@ -1,6 +1,6 @@
 package com.orderlist.api.model.dto.response;
 
-public record LoginDTO(
+public record RegisterDTO(
         String accessToken,
         String tokenType,
         long expiresIn){
