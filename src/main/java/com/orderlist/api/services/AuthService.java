@@ -37,12 +37,7 @@ public class AuthService {
         userRepository.save(user);
         String token = tokenService.generateToken(user);
 
-        RegisterDTO registerDTO = new RegisterDTO();
-        registerDTO.setAccessToken(token);
-        registerDTO.setTokenType("Bearer");
-        registerDTO.setExpiresIn(tokenService.getExpiresInSeconds());
-
-        return registerDTO;
+        return new RegisterDTO(token, "Bearer", tokenService.getExpiresInSeconds());
     }
 
     public LoginDTO login(LoginRequest dto) {
@@ -54,11 +49,6 @@ public class AuthService {
         User user = (User) auth.getPrincipal();
         String token = tokenService.generateToken(user);
 
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setAccessToken(token);
-        loginDTO.setTokenType("Bearer");
-        loginDTO.setExpiresIn(tokenService.getExpiresInSeconds());
-
-        return loginDTO;
+        return new LoginDTO(token, "Bearer", tokenService.getExpiresInSeconds());
     }
 }

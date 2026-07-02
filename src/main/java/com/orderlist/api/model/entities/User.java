@@ -1,6 +1,5 @@
 package com.orderlist.api.model.entities;
 
-import com.orderlist.api.model.enums.Roles;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
