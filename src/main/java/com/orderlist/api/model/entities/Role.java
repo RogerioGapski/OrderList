@@ -1,5 +1,6 @@
 package com.orderlist.api.model.entities;
 
+import com.orderlist.api.model.enums.Roles;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,15 +25,10 @@ public class Role implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role_name", nullable = false, unique = true)
-    private RoleType name;
+    private Roles name;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
-
-    public enum RoleType {
-        USER,
-        ADMIN
-    }
 
     @Override
     public boolean equals(Object o) {
