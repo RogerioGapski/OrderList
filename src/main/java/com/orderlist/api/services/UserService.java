@@ -5,7 +5,6 @@ import com.orderlist.api.model.dto.request.role.AddRole;
 import com.orderlist.api.model.dto.request.user.UpdateEmailDTO;
 import com.orderlist.api.model.dto.request.user.UpdateNameDTO;
 import com.orderlist.api.model.dto.request.user.UpdatePasswordDTO;
-import com.orderlist.api.model.entities.Role;
 import com.orderlist.api.model.entities.User;
 import com.orderlist.api.model.dto.request.auth.RegisterRequest;
 import com.orderlist.api.model.dto.response.UserDTO;
@@ -26,16 +25,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-
-    public User createUser(RegisterRequest dto) {
-        if(userRepository.existsByEmail(dto.email())){
-            throw new AlreadyExistsException("Email already in use.");
-        }
-
-        User user = userMapper.toEntity(dto);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return user;
-    }
 
     @Transactional
     public void deleteById(UUID id){
