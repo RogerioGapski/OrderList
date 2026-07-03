@@ -7,6 +7,7 @@ import com.orderlist.api.model.dto.response.LoginDTO;
 import com.orderlist.api.model.dto.response.RegisterDTO;
 import com.orderlist.api.model.entities.User;
 import com.orderlist.api.repository.UserRepository;
+import com.orderlist.api.security.JwtService;
 import com.orderlist.api.utils.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +24,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final TokenService tokenService;
+    private final JwtService jwtService;
     private final AuthenticationManager authManager;
 
     @Transactional
@@ -35,9 +36,9 @@ public class AuthService {
         User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        String token = tokenService.generateToken(user);
+        String token = jwtService.generateToken(user);
 
-        return new RegisterDTO(token, "Bearer", tokenService.getExpiresInSeconds());
+        return new RegisterDTO(token, "Bearer", jwtService.getExpiresInSeconds());
     }
 
     public LoginDTO login(LoginRequest dto) {
@@ -47,8 +48,8 @@ public class AuthService {
                                 dto.password()
                         ));
         User user = (User) auth.getPrincipal();
-        String token = tokenService.generateToken(user);
+        String token = jwtService.generateToken(user);
 
-        return new LoginDTO(token, "Bearer", tokenService.getExpiresInSeconds());
+        return new LoginDTO(token, "Bearer", jwtService.getExpiresInSeconds());
     }
 }

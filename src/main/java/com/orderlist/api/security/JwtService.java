@@ -1,4 +1,4 @@
-package com.orderlist.api.services;
+package com.orderlist.api.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -16,7 +16,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Service
-public class TokenService {
+public class JwtService {
 
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
