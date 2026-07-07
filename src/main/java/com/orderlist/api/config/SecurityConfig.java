@@ -6,6 +6,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.orderlist.api.repository.UserRepository;
 import com.orderlist.api.security.*;
+import com.orderlist.api.services.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,9 +44,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    JwtService jwtService,
                                                    AuthenticationEntry entryPoint,
+                                                   UserService userService,
                                                    CustomAccessDenied accessDeniedHandler) throws Exception {
 
-        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtService, entryPoint);
+        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtService, entryPoint, userService);
 
         http
                 .csrf(csrf -> csrf.disable())

@@ -5,7 +5,10 @@ import com.orderlist.api.model.dto.request.auth.LoginRequest;
 import com.orderlist.api.model.dto.request.auth.RegisterRequest;
 import com.orderlist.api.model.dto.response.LoginDTO;
 import com.orderlist.api.model.dto.response.RegisterDTO;
+import com.orderlist.api.model.entities.Role;
+import com.orderlist.api.model.enums.Roles;
 import com.orderlist.api.model.entities.User;
+import com.orderlist.api.repository.RoleRepository;
 import com.orderlist.api.repository.UserRepository;
 import com.orderlist.api.security.JwtService;
 import com.orderlist.api.utils.mapper.UserMapper;
@@ -26,6 +29,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
+    private final RoleRepository roleRepository;
 
     @Transactional
     public RegisterDTO registerUser(RegisterRequest dto) {
@@ -33,8 +37,12 @@ public class AuthService {
             throw new AlreadyExistsException("Email already in use.");
         }
 
+        Role defaultPermission = roleRepository.findByName(Roles.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
         User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.getRoles().add(defaultPermission);
         userRepository.save(user);
         String token = jwtService.generateToken(user);
 

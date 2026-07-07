@@ -3,16 +3,23 @@ package com.orderlist.api.security;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.orderlist.api.exceptions.customs.CustomAuthenticationException;
+import com.orderlist.api.model.entities.User;
+import com.orderlist.api.services.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.orderlist.api.exceptions.customs.CustomAuthenticationException.AuthErrorCode;
 
 import java.io.IOException;
+import java.util.Set;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -20,6 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final AuthenticationEntry entryPoint;
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(
@@ -35,6 +43,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throw new CustomAuthenticationException(AuthErrorCode.TOKEN_MISSING);
 
         String userId = jwtService.validateToken(token);
+        User user = userService.findUserById(UUID.fromString(userId));
+        CustomUserDetails userDetails = new CustomUserDetails(user);
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         filterChain.doFilter(request, response);
 
     } catch (TokenExpiredException e) {
