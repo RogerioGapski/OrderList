@@ -18,8 +18,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final AuthenticationEntry entryPoint;
     private final JwtService jwtService;
+    private final AuthenticationEntry entryPoint;
 
     @Override
     protected void doFilterInternal(
