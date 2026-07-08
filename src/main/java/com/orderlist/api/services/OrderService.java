@@ -13,6 +13,7 @@ import com.orderlist.api.utils.mapper.OrderMapper;
 import com.orderlist.api.repository.ItemRepository;
 import com.orderlist.api.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     @Transactional
+    @PreAuthorize("hasRole('USER')")
     public OrderDTO createOrder(CreateOrderDTO dto, UUID userId) {
         User user = userService.findUserById(userId);
         List<Item> pendingItems = itemRepository.findAllByUserId(userId).stream()
@@ -56,12 +58,14 @@ public class OrderService {
     }
 
     @Transactional
+    @PreAuthorize("#userId == authentication.principal.user.id")
     public void deleteById(Long orderId, UUID userId) {
         Order order = findOrderById(orderId);
         checkOwnership(order, userId);
         orderRepository.delete(order);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public OrderDTO findById(Long orderId, UUID userId) {
         Order order = findOrderById(orderId);
         checkOwnership(order, userId);
@@ -69,6 +73,7 @@ public class OrderService {
     }
 
     @Transactional
+    @PreAuthorize("#userId == authentication.principal.user.id")
     public void removeItem(Long orderId, Long itemId, UUID userId) {
         Order order = findOrderById(orderId);
         checkOwnership(order, userId);
