@@ -10,6 +10,7 @@ import com.orderlist.api.exceptions.customs.NotFoundException;
 import com.orderlist.api.utils.mapper.UserMapper;
 import com.orderlist.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,20 +26,24 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.user.id")
     public void deleteById(UUID id){
         User user = findUserById(id);
         userRepository.delete(user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDTO findById(UUID id){
         return userMapper.toDTO(findUserById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDTO findByEmail(String email){
         return userMapper.toDTO(findUserByEmail(email));
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.user.id")
     public UserDTO changeName(UUID id, UpdateNameDTO newName){
         User user = findUserById(id);
         user.setName(newName.name());
@@ -47,6 +52,7 @@ public class UserService {
     }
 
     @Transactional
+    @PreAuthorize("#id == authentication.principal.user.id")
     public UserDTO changeEmail(UUID id, UpdateEmailDTO newEmail) {
         if(userRepository.existsByEmail(newEmail.email())){
             throw new AlreadyExistsException("Email already in use.");
@@ -58,6 +64,7 @@ public class UserService {
     }
 
     @Transactional
+    @PreAuthorize("#id == authentication.principal.user.id")
     public void changePassword(UUID id, UpdatePasswordDTO newPassword) {
         User user = findUserById(id);
         user.setPassword(passwordEncoder.encode(newPassword.password()));
@@ -65,12 +72,12 @@ public class UserService {
     }
 
     //Auxiliary method
-    public User findUserById(UUID id){
+    protected User findUserById(UUID id){
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    public User findUserByEmail(String email){
+    protected User findUserByEmail(String email){
         return  userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
