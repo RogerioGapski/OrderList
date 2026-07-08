@@ -9,6 +9,7 @@ import com.orderlist.api.model.entities.Category;
 import com.orderlist.api.repository.CategoryRepository;
 import com.orderlist.api.utils.mapper.CategoryMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryDTO createCategory(CreateCategoryDTO dto){
         if(categoryRepository.existsByName(dto.name())){
             throw new AlreadyExistsException("Category already exists.");
@@ -32,15 +34,18 @@ public class CategoryService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteCategory(Long id){
         findCategoryById(id);
         categoryRepository.deleteById(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryDTO findById(Long id){
         return categoryMapper.toDTO(findCategoryById(id));
     }
 
+    @PreAuthorize("hasRole('USER')")
     public List<CategoryDTO> findAll(){
         return categoryRepository.findAll().stream()
                 .map(categoryMapper::toDTO)
@@ -48,6 +53,7 @@ public class CategoryService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryDTO updateCategory(Long id, UpdateCategoryDTO dto){
         Category category = findCategoryById(id);
         if(categoryRepository.existsByName(dto.name())){
