@@ -30,7 +30,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     @Transactional
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') and #userId == authentication.principal.user.id")
     public OrderDTO createOrder(CreateOrderDTO dto, UUID userId) {
         User user = userService.findUserById(userId);
         List<Item> pendingItems = itemRepository.findAllByUserId(userId).stream()
@@ -65,10 +65,16 @@ public class OrderService {
         orderRepository.delete(order);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
+    @PreAuthorize("#userId == authentication.principal.user.id")
     public OrderDTO findById(Long orderId, UUID userId) {
         Order order = findOrderById(orderId);
         checkOwnership(order, userId);
+        return orderMapper.toDTO(order);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public OrderDTO findByIdAsAdmin(Long orderId) {
+        Order order = findOrderById(orderId);
         return orderMapper.toDTO(order);
     }
 
