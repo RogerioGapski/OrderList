@@ -11,6 +11,7 @@ import com.orderlist.api.utils.mapper.AddressMapper;
 import com.orderlist.api.repository.AddressRepository;
 import com.orderlist.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class AddressService {
     private final UserRepository userRepository;
 
     @Transactional
+    @PreAuthorize("#userId == authentication.principal.user.id")
     public AddressDTO createAddress(CreateAddressDTO dto, UUID userId) {
         User user = findUserById(userId);
         Address address = addressMapper.toEntity(dto);
@@ -35,6 +37,7 @@ public class AddressService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public void deleteById(UUID userId, Long addressId) {
         User user = findUserById(userId);
         Address address = findAddressById(addressId);
@@ -42,6 +45,7 @@ public class AddressService {
         addressRepository.deleteById(addressId);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public AddressDTO findById(UUID userId, Long addressId) {
         User user = findUserById(userId);
         Address address = findAddressById(addressId);
@@ -49,6 +53,7 @@ public class AddressService {
         return addressMapper.toDTO(address);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public List<AddressDTO> getAddressesByUser(UUID userId) {
         User user = findUserById(userId);
         return user.getAddresses().stream()
@@ -57,6 +62,7 @@ public class AddressService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public AddressDTO updateAddress(UUID userId, UpdateAddressDTO dto, Long addressId) {
         User user = findUserById(userId);
         Address address = findAddressById(addressId);
