@@ -15,6 +15,7 @@ import com.orderlist.api.utils.mapper.ItemMapper;
 import com.orderlist.api.repository.ItemRepository;
 import com.orderlist.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ public class ItemService {
     private final UserService userService;
 
     @Transactional
+    @PreAuthorize("#userId == authentication.principal.user.id")
     public ItemDTO createItem(CreateItemDTO dto, Long productId, UUID userId) {
         Product product = findProductById(productId);
         if(product.getStock() < dto.quantity()){
@@ -53,6 +55,7 @@ public class ItemService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public void deleteById(Long itemId, UUID userId){
         Item item = findItemById(itemId);
         checkOwnership(item, userId);
@@ -64,12 +67,14 @@ public class ItemService {
         itemRepository.delete(item);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public ItemDTO findById(Long itemId, UUID userId){
         Item item = findItemById(itemId);
         checkOwnership(item, userId);
         return itemMapper.toDTO(item);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public List<ItemDTO> findAll(UUID userId) {
         return itemRepository.findAllByUserId(userId).stream()
                 .map(itemMapper::toDTO)
@@ -77,6 +82,7 @@ public class ItemService {
     }
 
     @Transactional
+    @PreAuthorize("#userId == authentication.principal.user.id")
     public ItemDTO increaseQuantity(Long itemId, UUID userId, UpdateItemQuantity dto) {
         Item item = findItemById(itemId);
         checkOwnership(item, userId);
@@ -96,6 +102,7 @@ public class ItemService {
     }
 
     @Transactional
+    @PreAuthorize("#userId == authentication.principal.user.id")
     public ItemDTO decreaseQuantity(Long itemId, UUID userId, UpdateItemQuantity dto){
         Item item = findItemById(itemId);
         checkOwnership(item, userId);
@@ -115,6 +122,7 @@ public class ItemService {
     }
 
     @Transactional
+    @PreAuthorize("#userId == authentication.principal.user.id")
     public void addToOrder(Long itemId, Long orderId, UUID userId) {
         Item item = findItemById(itemId);
         checkOwnership(item, userId);
