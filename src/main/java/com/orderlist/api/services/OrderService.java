@@ -85,12 +85,12 @@ public class OrderService {
     }
 
     //Auxiliary methods
-    private Order findOrderById(Long id){
+    Order findOrderById(Long id){
         return orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
     }
 
-    private void checkOwnership(Order order, UUID userId){
+    void checkOwnership(Order order, UUID userId){
         if(!order.getUser().getId().equals(userId)){
             throw new UnauthorizedException("Order does not belong to this user.");
         }

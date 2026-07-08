@@ -49,7 +49,7 @@ public class RoleService {
     }
 
     //Auxiliary methods
-    public Role findRoleById(Long roleId){
+    Role findRoleById(Long roleId){
         return roleRepository.findById(roleId)
                 .orElseThrow(() -> new NotFoundException("Role not found"));
     }

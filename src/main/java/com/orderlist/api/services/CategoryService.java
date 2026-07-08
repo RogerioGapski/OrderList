@@ -59,7 +59,7 @@ public class CategoryService {
     }
 
     //Auxiliary method
-    public Category findCategoryById(Long id){
+    Category findCategoryById(Long id){
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Category not found."));
     }

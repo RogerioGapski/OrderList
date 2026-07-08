@@ -131,17 +131,17 @@ public class ItemService {
     }
 
     //Auxiliary methods
-    private Item findItemById(Long id){
+    Item findItemById(Long id){
         return itemRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Item not found."));
     }
 
-    private Product findProductById(Long id){
+    Product findProductById(Long id){
         return productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found."));
     }
 
-    private void checkOwnership(Item item, UUID userId){
+    void checkOwnership(Item item, UUID userId){
         if(!item.getUser().getId().equals(userId)){
             throw new UnauthorizedException("Item does not belong to this user.");
         }

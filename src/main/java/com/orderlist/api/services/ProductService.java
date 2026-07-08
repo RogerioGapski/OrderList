@@ -88,7 +88,7 @@ public class ProductService {
     }
 
     //Auxiliary method
-    public Product findProductById(Long id){
+    Product findProductById(Long id){
         return productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found."));
     }

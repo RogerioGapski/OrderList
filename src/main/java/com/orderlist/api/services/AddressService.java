@@ -71,17 +71,17 @@ public class AddressService {
     }
 
     //Auxiliary methods
-    private User findUserById(UUID userId){
+    User findUserById(UUID userId){
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    private Address findAddressById(Long addressId){
+    Address findAddressById(Long addressId){
         return addressRepository.findById(addressId)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
     }
 
-    private void checkOwnership(Address address, User user) {
+    void checkOwnership(Address address, User user) {
         if(!address.getUser().getId().equals(user.getId())) {
             throw new UnauthorizedException("This address does not belong to the user.");
         }

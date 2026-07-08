@@ -72,12 +72,12 @@ public class UserService {
     }
 
     //Auxiliary method
-    protected User findUserById(UUID id){
+    User findUserById(UUID id){
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    protected User findUserByEmail(String email){
+    User findUserByEmail(String email){
         return  userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
