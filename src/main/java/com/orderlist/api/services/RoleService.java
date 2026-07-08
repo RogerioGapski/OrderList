@@ -8,6 +8,7 @@ import com.orderlist.api.model.entities.User;
 import com.orderlist.api.repository.RoleRepository;
 import com.orderlist.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class RoleService {
     private final UserService userService;
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public UserRolesDTO addRole(UUID userId, Long roleId) {
         User user = userService.findUserById(userId);
         Role role = findRoleById(roleId);
@@ -36,6 +38,7 @@ public class RoleService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public UserRolesDTO removeRole(UUID userId, Long roleId) {
         User user = userService.findUserById(userId);
         Role role = findRoleById(roleId);

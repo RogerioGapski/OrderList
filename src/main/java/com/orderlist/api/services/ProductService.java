@@ -8,6 +8,7 @@ import com.orderlist.api.exceptions.customs.NotFoundException;
 import com.orderlist.api.utils.mapper.ProductMapper;
 import com.orderlist.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class ProductService {
     private final CategoryService categoryService;
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductDTO createProduct(CreateProductDTO dto) {
         Category category = categoryService.findCategoryById(dto.categoryId());
         Product product = productMapper.toEntity(dto);
@@ -31,6 +33,7 @@ public class ProductService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteById(Long id) {
         Product product = findProductById(id);
         productRepository.delete(product);
@@ -55,6 +58,7 @@ public class ProductService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductDTO updatePrice(Long id, UpdateProductPrice dto) {
         Product product = findProductById(id);
         product.setPrice(dto.price());
@@ -63,6 +67,7 @@ public class ProductService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductDTO updateStock(Long id, UpdateProductStock dto){
         Product product = findProductById(id);
         product.setStock(dto.stock());
@@ -71,6 +76,7 @@ public class ProductService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductDTO updateName(Long id, UpdateProductName dto) {
         Product product = findProductById(id);
         product.setName(dto.name());
@@ -79,6 +85,7 @@ public class ProductService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductDTO updateCategory(Long id, Long categoryId) {
         Product product = findProductById(id);
         Category category = categoryService.findCategoryById(categoryId);
