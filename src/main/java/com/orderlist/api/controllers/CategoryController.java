@@ -48,7 +48,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.findAll());
     }
 
-    @PatchMapping("admin/update/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(
             @PathVariable Long id,
             @RequestBody @Valid UpdateCategoryDTO dto) {

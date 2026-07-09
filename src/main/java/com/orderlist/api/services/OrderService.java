@@ -39,7 +39,7 @@ public class OrderService {
                 .toList();
 
         if(pendingItems.isEmpty()){
-            throw new BadRequestException("No items avaliable to create and order.");
+            throw new BadRequestException("No items available to create and order.");
         }
 
         BigDecimal total = pendingItems.stream()
