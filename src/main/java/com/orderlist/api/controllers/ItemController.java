@@ -3,11 +3,11 @@ package com.orderlist.api.controllers;
 import com.orderlist.api.model.dto.request.item.CreateItemDTO;
 import com.orderlist.api.model.dto.request.item.UpdateItemQuantity;
 import com.orderlist.api.model.dto.response.ItemDTO;
+import com.orderlist.api.security.CurrentUserId;
 import com.orderlist.api.services.ItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -24,7 +24,7 @@ public class ItemController {
 
     @PostMapping("/product/{productId}")
     public ResponseEntity<ItemDTO> createItem(
-            @AuthenticationPrincipal UUID userId,
+            @CurrentUserId UUID userId,
             @PathVariable Long productId,
             @RequestBody @Valid CreateItemDTO dto) {
         ItemDTO item = itemService.createItem(dto, productId, userId);
@@ -38,7 +38,7 @@ public class ItemController {
 
     @DeleteMapping("/{itemId}")
     public ResponseEntity<Void> deleteItem(
-            @AuthenticationPrincipal UUID userId,
+            @CurrentUserId UUID userId,
             @PathVariable Long itemId) {
         itemService.deleteById(itemId, userId);
         return ResponseEntity.noContent().build();
@@ -58,7 +58,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}/increase")
     public ResponseEntity<ItemDTO> increaseQuantity(
-            @AuthenticationPrincipal UUID userId,
+            @CurrentUserId UUID userId,
             @PathVariable Long itemId,
             @RequestBody @Valid UpdateItemQuantity dto) {
         return ResponseEntity.ok(itemService.increaseQuantity(itemId, userId, dto));
@@ -66,7 +66,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}/decrease")
     public ResponseEntity<ItemDTO> decreaseQuantity(
-            @AuthenticationPrincipal UUID userId,
+            @CurrentUserId UUID userId,
             @PathVariable Long itemId,
             @RequestBody @Valid UpdateItemQuantity dto) {
         return ResponseEntity.ok(itemService.decreaseQuantity(itemId, userId, dto));
@@ -74,7 +74,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}/order/{orderId}")
     public ResponseEntity<Void> addToOrder(
-            @AuthenticationPrincipal UUID userId,
+            @CurrentUserId UUID userId,
             @PathVariable Long itemId,
             @PathVariable Long orderId) {
         itemService.addToOrder(itemId, orderId, userId);

@@ -4,11 +4,11 @@ import com.orderlist.api.model.dto.request.user.UpdateEmailDTO;
 import com.orderlist.api.model.dto.request.user.UpdateNameDTO;
 import com.orderlist.api.model.dto.request.user.UpdatePasswordDTO;
 import com.orderlist.api.model.dto.response.UserDTO;
+import com.orderlist.api.security.CurrentUserId;
 import com.orderlist.api.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -45,14 +45,14 @@ public class UserController {
 
     @PatchMapping("/email/change")
     public ResponseEntity<UserDTO> updateEmail(
-            @AuthenticationPrincipal UUID id,
+            @CurrentUserId UUID id,
             @RequestBody @Valid UpdateEmailDTO dto) {
         return ResponseEntity.ok().body(userService.changeEmail(id, dto));
     }
 
     @PatchMapping("/password/change")
     public ResponseEntity<Void> updatePassword(
-            @AuthenticationPrincipal UUID id,
+            @CurrentUserId UUID id,
             @RequestBody @Valid UpdatePasswordDTO dto) {
         userService.changePassword(id, dto);
         return ResponseEntity.noContent().build();
