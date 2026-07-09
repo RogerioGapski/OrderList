@@ -29,7 +29,7 @@ public class AuthController {
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(register.getUser().id())
+                .buildAndExpand(register.user().id())
                 .toUri();
         return ResponseEntity.created(uri).body(register);
     }

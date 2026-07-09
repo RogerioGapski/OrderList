@@ -8,6 +8,7 @@ import com.orderlist.api.model.entities.User;
 import com.orderlist.api.repository.RoleRepository;
 import com.orderlist.api.repository.UserRepository;
 import com.orderlist.api.utils.mapper.RoleMapper;
+import com.orderlist.api.utils.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class RoleService {
     private final RoleMapper roleMapper;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
@@ -61,10 +63,9 @@ public class RoleService {
     }
 
     private UserRolesDTO toUserRolesDTO(User user) {
-        return new UserRolesDTO(
+        return new UserRolesDTO(userMapper.toDTO(user),
                 user.getRoles().stream()
                         .map(roleMapper::toDTO)
-                        .collect(Collectors.toSet())
-        );
+                        .collect(Collectors.toSet()));
     }
 }
