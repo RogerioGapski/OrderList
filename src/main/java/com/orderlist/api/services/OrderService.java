@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,8 +43,8 @@ public class OrderService {
         }
 
         BigDecimal total = pendingItems.stream()
-                .mapToDouble(Item::getUnitaryPrice)
-                .sum();
+                .map(Item::getUnitaryPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Order order = orderMapper.toEntity(dto);
         order.setUser(user);

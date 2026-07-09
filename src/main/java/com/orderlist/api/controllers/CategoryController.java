@@ -20,7 +20,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PostMapping("/admin/create")
+    @PostMapping("/create")
     public ResponseEntity<CategoryDTO> createCategory(
             @RequestBody @Valid CreateCategoryDTO dto) {
         CategoryDTO category = categoryService.createCategory(dto);
@@ -32,7 +32,7 @@ public class CategoryController {
         return ResponseEntity.created(uri).body(category);
     }
 
-    @DeleteMapping("admin/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
