@@ -19,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +46,9 @@ public class ItemService {
         Item item = itemMapper.toEntity(dto);
         item.setProduct(product);
         item.setUser(user);
-        item.setUnitaryPrice(dto.quantity() * product.getPrice());
+        item.setUnitaryPrice(
+                product.getPrice().multiply(BigDecimal.valueOf(dto.quantity()))
+        );
 
         product.setStock(product.getStock() - dto.quantity());
         productRepository.save(product);
@@ -94,7 +97,9 @@ public class ItemService {
 
         product.setStock(product.getStock() - dto.quantity());
         item.setQuantity(item.getQuantity() + dto.quantity());
-        item.setUnitaryPrice(item.getQuantity() * product.getPrice());
+        item.setUnitaryPrice(
+                product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
+        );
 
         productRepository.save(product);
         itemRepository.save(item);
@@ -114,7 +119,9 @@ public class ItemService {
 
         product.setStock(product.getStock() + dto.quantity());
         item.setQuantity(item.getQuantity() - dto.quantity());
-        item.setUnitaryPrice(item.getQuantity() * product.getPrice());
+        item.setUnitaryPrice(
+                product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
+        );
 
         productRepository.save(product);
         itemRepository.save(item);

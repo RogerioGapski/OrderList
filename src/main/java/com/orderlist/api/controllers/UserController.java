@@ -55,6 +55,6 @@ public class UserController {
             @AuthenticationPrincipal UUID id,
             @RequestBody @Valid UpdatePasswordDTO dto) {
         userService.changePassword(id, dto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

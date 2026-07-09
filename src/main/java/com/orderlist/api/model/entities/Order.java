@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +36,7 @@ public class Order implements Serializable {
     private OrderStatus status;
 
     @Column(nullable = false)
-    private Double total;
+    private BigDecimal total;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

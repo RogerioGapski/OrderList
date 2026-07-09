@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -25,7 +26,7 @@ public class Product implements Serializable {
     private String name;
 
     @Column(name = "product_price", nullable = false)
-    private Double price;
+    private BigDecimal price;
 
     @Column(nullable = false)
     private Integer stock;

@@ -4,6 +4,7 @@ package com.orderlist.api.model.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -25,7 +26,7 @@ public class Item implements Serializable {
     private Integer quantity;
 
     @Column(name = "unitary_price", nullable = false)
-    private Double unitaryPrice;
+    private BigDecimal unitaryPrice;
 
     @OneToOne
     @JoinColumn(name = "product_id", nullable = false)

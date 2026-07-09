@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -42,7 +43,7 @@ public class OrderService {
             throw new BadRequestException("No items avaliable to create and order.");
         }
 
-        double total = pendingItems.stream()
+        BigDecimal total = pendingItems.stream()
                 .mapToDouble(Item::getUnitaryPrice)
                 .sum();
 

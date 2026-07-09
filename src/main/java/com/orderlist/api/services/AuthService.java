@@ -1,6 +1,7 @@
 package com.orderlist.api.services;
 
 import com.orderlist.api.exceptions.customs.AlreadyExistsException;
+import com.orderlist.api.exceptions.customs.NotFoundException;
 import com.orderlist.api.model.dto.request.auth.LoginRequest;
 import com.orderlist.api.model.dto.request.auth.RegisterRequest;
 import com.orderlist.api.model.dto.response.LoginDTO;
@@ -39,7 +40,7 @@ public class AuthService {
         }
 
         Role defaultPermission = roleRepository.findByName(Roles.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() -> new NotFoundException("Role not found"));
 
         User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
