@@ -8,6 +8,7 @@ import com.orderlist.api.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -42,16 +43,16 @@ public class UserController {
         return ResponseEntity.ok().body(userService.changeName(id, dto));
     }
 
-    @PatchMapping("/{id}/email")
+    @PatchMapping("/email/change")
     public ResponseEntity<UserDTO> updateEmail(
-            @PathVariable UUID id,
+            @AuthenticationPrincipal UUID id,
             @RequestBody @Valid UpdateEmailDTO dto) {
         return ResponseEntity.ok().body(userService.changeEmail(id, dto));
     }
 
-    @PatchMapping("/{id}/password")
+    @PatchMapping("/password/change")
     public ResponseEntity<Void> updatePassword(
-            @PathVariable UUID id,
+            @AuthenticationPrincipal UUID id,
             @RequestBody @Valid UpdatePasswordDTO dto) {
         userService.changePassword(id, dto);
         return ResponseEntity.ok().build();
