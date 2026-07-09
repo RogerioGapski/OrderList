@@ -46,7 +46,7 @@ public class AuthService {
         userRepository.save(user);
         String token = jwtService.generateToken(user);
 
-        return new RegisterDTO(token, "Bearer", jwtService.getExpiresInSeconds());
+        return new RegisterDTO(token, "Bearer", jwtService.getExpiresInSeconds(), userMapper.toDTO(user));
     }
 
     public LoginDTO login(LoginRequest dto) {

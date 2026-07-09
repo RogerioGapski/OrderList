@@ -10,4 +10,5 @@ public class RegisterDTO{
         String accessToken;
         String tokenType;
         long expiresIn;
+        UserDTO user;
 }
