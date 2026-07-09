@@ -10,6 +10,7 @@ import com.orderlist.api.model.enums.Roles;
 import com.orderlist.api.model.entities.User;
 import com.orderlist.api.repository.RoleRepository;
 import com.orderlist.api.repository.UserRepository;
+import com.orderlist.api.security.CustomUserDetails;
 import com.orderlist.api.security.JwtService;
 import com.orderlist.api.utils.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -55,8 +56,8 @@ public class AuthService {
                                 dto.email(),
                                 dto.password()
                         ));
-        User user = (User) auth.getPrincipal();
-        String token = jwtService.generateToken(user);
+        CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+        String token = jwtService.generateToken(user.getUser());
 
         return new LoginDTO(token, "Bearer", jwtService.getExpiresInSeconds());
     }
