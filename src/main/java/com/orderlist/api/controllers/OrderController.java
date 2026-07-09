@@ -17,12 +17,12 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{userId}/orders")
+@RequestMapping("/orders/user")
 public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping
+    @PostMapping("/{userId}")
     public ResponseEntity<OrderDTO> createOrder(
             @AuthenticationPrincipal UUID userId,
             @RequestBody @Valid CreateOrderDTO dto) {
@@ -35,7 +35,7 @@ public class OrderController {
         return ResponseEntity.created(uri).body(order);
     }
 
-    @DeleteMapping("/{orderId}")
+    @DeleteMapping("/{userId}/{orderId}")
     public ResponseEntity<Void> deleteOrder(
             @PathVariable UUID userId,
             @PathVariable Long orderId) {
@@ -43,21 +43,21 @@ public class OrderController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{orderId}")
+    @GetMapping("/{userId}/{orderId}")
     public ResponseEntity<OrderDTO> findById(
             @AuthenticationPrincipal UUID userId,
             @PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.findById(orderId, userId));
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/admin/find")
     public ResponseEntity<Order> findOrderAdmin(
             @PathVariable UUID userId,
             @PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.findOrderByUser(orderId, userId));
     }
 
-    @DeleteMapping("/{orderId}/items/{itemId}")
+    @DeleteMapping("/{userId}/{orderId}/{itemId}")
     public ResponseEntity<Void> removeItem(
             @PathVariable UUID userId,
             @PathVariable Long orderId,

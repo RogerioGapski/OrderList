@@ -7,6 +7,7 @@ import com.orderlist.api.services.AddressService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -16,14 +17,14 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/{userId}/addresses")
+@RequestMapping("addresses/{userId}")
 public class AddressController {
 
     private final AddressService addressService;
 
     @PostMapping
     public ResponseEntity<AddressDTO> createAddress(
-            @PathVariable UUID userId,
+            @AuthenticationPrincipal UUID userId,
             @RequestBody @Valid CreateAddressDTO dto) {
         AddressDTO address = addressService.createAddress(dto, userId);
         URI uri = ServletUriComponentsBuilder
@@ -36,7 +37,7 @@ public class AddressController {
 
     @DeleteMapping("/{addressId}")
     public ResponseEntity<Void> deleteAddress(
-            @PathVariable UUID userId,
+            @AuthenticationPrincipal UUID userId,
             @PathVariable Long addressId) {
         addressService.deleteById(userId, addressId);
         return ResponseEntity.noContent().build();
@@ -57,7 +58,7 @@ public class AddressController {
 
     @PutMapping("/{addressId}")
     public ResponseEntity<AddressDTO> updateAddress(
-            @PathVariable UUID userId,
+            @AuthenticationPrincipal UUID userId,
             @PathVariable Long addressId,
             @RequestBody @Valid UpdateAddressDTO dto) {
         return ResponseEntity.ok().body(addressService.updateAddress(userId, dto, addressId));

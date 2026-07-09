@@ -37,7 +37,7 @@ public class AddressService {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
+    @PreAuthorize("#userId == authentication.principal.user.id")
     public void deleteById(UUID userId, Long addressId) {
         User user = findUserById(userId);
         Address address = findAddressById(addressId);
@@ -62,7 +62,7 @@ public class AddressService {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
+    @PreAuthorize("#userId == authentication.principal.user.id")
     public AddressDTO updateAddress(UUID userId, UpdateAddressDTO dto, Long addressId) {
         User user = findUserById(userId);
         Address address = findAddressById(addressId);
