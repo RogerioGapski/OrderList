@@ -19,9 +19,7 @@ public class CustomAuthenticationException extends AuthenticationException {
     public enum AuthErrorCode {
         TOKEN_MISSING("Token not provided"),
         TOKEN_INVALID("Invalid token"),
-        TOKEN_EXPIRED("Your session has expired, please log in again"),
-        TOKEN_MALFORMED("Invalid token format");
-
+        TOKEN_EXPIRED("Your session has expired, please log in again");
         private final String message;
 
         AuthErrorCode(String message) {

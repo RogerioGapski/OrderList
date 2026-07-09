@@ -1,6 +1,7 @@
 package com.orderlist.api.exceptions.handler;
 
 import com.orderlist.api.exceptions.customs.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -10,33 +11,35 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.Instant;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(AlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleAlreadyExists(AlreadyExistsException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage()));
+    public ResponseEntity<ErrorResponse> handleAlreadyExists(AlreadyExistsException e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.CONFLICT, e.getMessage(), request);
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    public ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(NotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
+    public ResponseEntity<ErrorResponse> handleNotFound(NotFoundException e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(e.getMessage()));
+    public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException e, HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleArgumentNotValid(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse> handleArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
         String message = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -44,12 +47,23 @@ public class GlobalExceptionHandler {
                 .findFirst()
                 .orElse("Invalid requisition");
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(message));
+        return buildResponse(HttpStatus.BAD_REQUEST, message, request);
     }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(Exception e) {
+    public ResponseEntity<ErrorResponse> handleGeneric(Exception e, HttpServletRequest request) {
         log.error("Unexpected error", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse("An unexpected error occurred."));
+        return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request);
+    }
+
+    private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, String message, HttpServletRequest request) {
+        ErrorResponse body = new ErrorResponse(
+                Instant.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                message,
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(body);
     }
 }

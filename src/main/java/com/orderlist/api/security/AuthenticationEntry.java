@@ -1,9 +1,11 @@
 package com.orderlist.api.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.orderlist.api.exceptions.handler.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -25,12 +27,13 @@ public class AuthenticationEntry implements AuthenticationEntryPoint {
                              HttpServletResponse response,
                              AuthenticationException authException) throws IOException {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", Instant.now().toString());
-        body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-        body.put("error", "Unauthorized");
-        body.put("message", authException.getMessage());
-        body.put("path", request.getRequestURI());
+        ErrorResponse body = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                authException.getMessage(),
+                request.getRequestURI()
+        );
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

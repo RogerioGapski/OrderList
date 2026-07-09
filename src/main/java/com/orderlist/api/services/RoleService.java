@@ -7,18 +7,21 @@ import com.orderlist.api.model.entities.Role;
 import com.orderlist.api.model.entities.User;
 import com.orderlist.api.repository.RoleRepository;
 import com.orderlist.api.repository.UserRepository;
+import com.orderlist.api.utils.mapper.RoleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class RoleService {
 
     private final RoleRepository roleRepository;
+    private final RoleMapper roleMapper;
     private final UserRepository userRepository;
     private final UserService userService;
 
@@ -34,7 +37,7 @@ public class RoleService {
         user.getRoles().add(role);
         userRepository.save(user);
 
-        return new UserRolesDTO(user.getRoles());
+        return toUserRolesDTO(user);
     }
 
     @Transactional
@@ -48,12 +51,20 @@ public class RoleService {
 
         user.getRoles().remove(role);
         userRepository.save(user);
-        return new UserRolesDTO(user.getRoles());
+        return toUserRolesDTO(user);
     }
 
     //Auxiliary methods
     Role findRoleById(Long roleId){
         return roleRepository.findById(roleId)
                 .orElseThrow(() -> new NotFoundException("Role not found"));
+    }
+
+    private UserRolesDTO toUserRolesDTO(User user) {
+        return new UserRolesDTO(
+                user.getRoles().stream()
+                        .map(roleMapper::toDTO)
+                        .collect(Collectors.toSet())
+        );
     }
 }
