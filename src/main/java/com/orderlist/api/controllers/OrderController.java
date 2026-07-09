@@ -50,8 +50,8 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findById(orderId, userId));
     }
 
-    @GetMapping("/admin/find")
-    public ResponseEntity<Order> findOrderAdmin(
+    @GetMapping("/admin/{userId}/{orderId}")
+    public ResponseEntity<OrderDTO> findOrderAdmin(
             @PathVariable UUID userId,
             @PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.findOrderByUser(orderId, userId));

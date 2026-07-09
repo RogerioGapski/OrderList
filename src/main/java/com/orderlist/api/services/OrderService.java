@@ -74,14 +74,14 @@ public class OrderService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public Order findOrderByUser(Long orderId, UUID userId) {
+    public OrderDTO findOrderByUser(Long orderId, UUID userId) {
         Order order = findOrderById(orderId);
         User user = userService.findUserById(userId);
 
         if(!order.getUser().getId().equals(user.getId())){
             throw new BadRequestException("The order doesn't belong to this user");
         }
-        return order;
+        return orderMapper.toDTO(order);
     }
 
     @Transactional
