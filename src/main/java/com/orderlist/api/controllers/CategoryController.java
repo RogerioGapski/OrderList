@@ -20,7 +20,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PostMapping
+    @PostMapping("/admin/create")
     public ResponseEntity<CategoryDTO> createCategory(
             @RequestBody @Valid CreateCategoryDTO dto) {
         CategoryDTO category = categoryService.createCategory(dto);
@@ -32,7 +32,7 @@ public class CategoryController {
         return ResponseEntity.created(uri).body(category);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("admin/delete/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
@@ -48,7 +48,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.findAll());
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("admin/update/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(
             @PathVariable Long id,
             @RequestBody @Valid UpdateCategoryDTO dto) {

@@ -40,7 +40,7 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public CategoryDTO findById(Long id){
         return categoryMapper.toDTO(findCategoryById(id));
     }
