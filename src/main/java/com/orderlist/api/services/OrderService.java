@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     @Transactional
-    @PreAuthorize("hasRole('USER') and #userId == authentication.principal.user.id")
+    @PreAuthorize("#userId == authentication.principal.user.id")
     public OrderDTO createOrder(CreateOrderDTO dto, UUID userId) {
         User user = userService.findUserById(userId);
         List<Item> pendingItems = itemRepository.findAllByUserId(userId).stream()
@@ -73,13 +74,18 @@ public class OrderService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public OrderDTO findByIdAsAdmin(Long orderId) {
+    public Order findOrderByUser(Long orderId, UUID userId) {
         Order order = findOrderById(orderId);
-        return orderMapper.toDTO(order);
+        User user = userService.findUserById(userId);
+
+        if(!order.getUser().getId().equals(user.getId())){
+            throw new BadRequestException("The order doesn't belong to this user");
+        }
+        return order;
     }
 
     @Transactional
-    @PreAuthorize("#userId == authentication.principal.user.id")
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public void removeItem(Long orderId, Long itemId, UUID userId) {
         Order order = findOrderById(orderId);
         checkOwnership(order, userId);

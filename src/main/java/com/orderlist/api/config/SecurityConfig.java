@@ -44,10 +44,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    JwtService jwtService,
                                                    AuthenticationEntry entryPoint,
-                                                   UserService userService,
+                                                   UserRepository userRepository,
                                                    CustomAccessDenied accessDeniedHandler) throws Exception {
 
-        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtService, entryPoint, userService);
+        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtService, entryPoint, userRepository);
 
         http
                 .csrf(csrf -> csrf.disable())
