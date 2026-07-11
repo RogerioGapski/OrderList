@@ -27,7 +27,7 @@ public class Item implements Serializable {
     @Column(name = "unitary_price", nullable = false)
     private BigDecimal unitaryPrice;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 

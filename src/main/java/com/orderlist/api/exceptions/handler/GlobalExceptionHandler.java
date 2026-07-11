@@ -30,12 +30,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(NotFoundException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request);
+        return buildResponse(HttpStatus.NOT_FOUND, e.getMessage(), request);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException e, HttpServletRequest request) {
-        return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request);
+        return buildResponse(HttpStatus.FORBIDDEN, e.getMessage(), request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -52,8 +52,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception e, HttpServletRequest request) {
-        log.error("Unexpected error", e);
-        return buildResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request);
+        log.error("Unexpected error on {} {}", request.getMethod(), request.getRequestURI(), e);
+        return buildResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "An unexpected error occurred. Please try again later",
+                request);
     }
 
     private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, String message, HttpServletRequest request) {

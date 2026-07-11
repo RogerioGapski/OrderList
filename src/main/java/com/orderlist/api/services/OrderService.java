@@ -28,7 +28,6 @@ public class OrderService {
 
     private final UserService userService;
     private final ItemRepository itemRepository;
-    private final ItemMapper itemMapper;
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
 
@@ -37,7 +36,6 @@ public class OrderService {
     public OrderDTO createOrder(CreateOrderDTO dto, UUID userId) {
         User user = userService.findUserById(userId);
         List<Item> pendingItems = itemRepository.findAllByUserIdNoPageable(userId).stream()
-                .filter(i -> i.getOrder() == null)
                 .toList();
 
         if(pendingItems.isEmpty()){
