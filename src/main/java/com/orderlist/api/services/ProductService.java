@@ -8,11 +8,11 @@ import com.orderlist.api.exceptions.customs.NotFoundException;
 import com.orderlist.api.utils.mapper.ProductMapper;
 import com.orderlist.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -49,12 +49,9 @@ public class ProductService {
         return productMapper.toDTO(product);
     }
 
-    public List<ProductDTO> findByCategory(String categoryName) {
-
-        List<Product> products = productRepository.findByCategoryName(categoryName);
-        return products.stream()
-                .map(productMapper::toDTO)
-                .toList();
+    public Page<ProductDTO> findByCategory(String categoryName, Pageable pageable) {
+        Page<Product> products = productRepository.findByCategoryName(categoryName, pageable);
+        return products.map(productMapper::toDTO);
     }
 
     @Transactional

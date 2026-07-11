@@ -2,7 +2,6 @@ package com.orderlist.api.services;
 
 import com.orderlist.api.exceptions.customs.UnauthorizedException;
 import com.orderlist.api.model.dto.request.order.CreateOrderDTO;
-import com.orderlist.api.model.dto.response.ItemDTO;
 import com.orderlist.api.model.entities.Item;
 import com.orderlist.api.model.entities.Order;
 import com.orderlist.api.model.dto.response.OrderDTO;
@@ -10,6 +9,7 @@ import com.orderlist.api.exceptions.customs.BadRequestException;
 import com.orderlist.api.exceptions.customs.NotFoundException;
 import com.orderlist.api.model.entities.User;
 import com.orderlist.api.model.enums.OrderStatus;
+import com.orderlist.api.utils.mapper.ItemMapper;
 import com.orderlist.api.utils.mapper.OrderMapper;
 import com.orderlist.api.repository.ItemRepository;
 import com.orderlist.api.repository.OrderRepository;
@@ -28,6 +28,7 @@ public class OrderService {
 
     private final UserService userService;
     private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
 
@@ -51,6 +52,7 @@ public class OrderService {
         order.setUser(user);
         order.setStatus(OrderStatus.PENDING);
         order.setTotal(total);
+        order.setItems(pendingItems);
         orderRepository.save(order);
 
         pendingItems.forEach(item -> item.setOrder(order));

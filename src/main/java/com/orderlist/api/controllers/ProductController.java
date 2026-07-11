@@ -5,6 +5,8 @@ import com.orderlist.api.model.dto.response.ProductDTO;
 import com.orderlist.api.services.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -48,9 +50,9 @@ public class ProductController {
     }
 
     @GetMapping("/category/{categoryName}")
-    public ResponseEntity<List<ProductDTO>> findByCategory(
-            @PathVariable String categoryName) {
-        return ResponseEntity.ok(productService.findByCategory(categoryName));
+    public ResponseEntity<Page<ProductDTO>> findByCategory(
+            @PathVariable String categoryName, Pageable pageable) {
+        return ResponseEntity.ok(productService.findByCategory(categoryName, pageable));
     }
 
     @PatchMapping("/{id}/price")
