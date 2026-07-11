@@ -2,6 +2,7 @@ package com.orderlist.api.services;
 
 import com.orderlist.api.exceptions.customs.UnauthorizedException;
 import com.orderlist.api.model.dto.request.order.CreateOrderDTO;
+import com.orderlist.api.model.dto.response.ItemDTO;
 import com.orderlist.api.model.entities.Item;
 import com.orderlist.api.model.entities.Order;
 import com.orderlist.api.model.dto.response.OrderDTO;
@@ -34,7 +35,7 @@ public class OrderService {
     @PreAuthorize("#userId == authentication.principal.user.id")
     public OrderDTO createOrder(CreateOrderDTO dto, UUID userId) {
         User user = userService.findUserById(userId);
-        List<Item> pendingItems = itemRepository.findAllByUserId(userId).stream()
+        List<Item> pendingItems = itemRepository.findAllByUserIdNoPageable(userId).stream()
                 .filter(i -> i.getOrder() == null)
                 .toList();
 
