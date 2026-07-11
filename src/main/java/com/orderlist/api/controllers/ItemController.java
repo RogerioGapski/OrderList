@@ -7,6 +7,8 @@ import com.orderlist.api.security.CurrentUserId;
 import com.orderlist.api.services.ItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -52,8 +54,8 @@ public class ItemController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<ItemDTO>> findAll(@PathVariable UUID userId) {
-        return ResponseEntity.ok(itemService.findAll(userId));
+    public ResponseEntity<Page<ItemDTO>> findAll(@PathVariable UUID userId, Pageable pageable) {
+        return ResponseEntity.ok(itemService.findAll(userId, pageable));
     }
 
     @PatchMapping("/{itemId}/increase")

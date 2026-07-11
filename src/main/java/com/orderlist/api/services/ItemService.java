@@ -15,6 +15,8 @@ import com.orderlist.api.utils.mapper.ItemMapper;
 import com.orderlist.api.repository.ItemRepository;
 import com.orderlist.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,10 +80,9 @@ public class ItemService {
     }
 
     @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
-    public List<ItemDTO> findAll(UUID userId) {
-        return itemRepository.findAllByUserId(userId).stream()
-                .map(itemMapper::toDTO)
-                .toList();
+    public Page<ItemDTO> findAll(UUID userId, Pageable pageable) {
+        Page<Item> all = itemRepository.findAllByUserId(userId, pageable);
+        return all.map(itemMapper::toDTO);
     }
 
     @Transactional
