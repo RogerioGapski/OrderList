@@ -9,6 +9,8 @@ import com.orderlist.api.model.entities.Category;
 import com.orderlist.api.repository.CategoryRepository;
 import com.orderlist.api.utils.mapper.CategoryMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,10 +48,9 @@ public class CategoryService {
     }
 
     @PreAuthorize("hasRole('USER')")
-    public List<CategoryDTO> findAll(){
-        return categoryRepository.findAll().stream()
-                .map(categoryMapper::toDTO)
-                .toList();
+    public Page<CategoryDTO> findAll(Pageable pageable){
+        Page<Category> all = categoryRepository.findAll(pageable);
+        return all.map(categoryMapper::toDTO);
     }
 
     @Transactional

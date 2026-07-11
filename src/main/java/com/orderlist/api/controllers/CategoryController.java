@@ -6,6 +6,8 @@ import com.orderlist.api.model.dto.response.CategoryDTO;
 import com.orderlist.api.services.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -44,8 +46,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAll() {
-        return ResponseEntity.ok(categoryService.findAll());
+    public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(categoryService.findAll(pageable));
     }
 
     @PatchMapping("/update/{id}")
