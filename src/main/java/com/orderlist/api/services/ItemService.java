@@ -1,6 +1,5 @@
 package com.orderlist.api.services;
 
-import com.orderlist.api.exceptions.customs.UnauthorizedException;
 import com.orderlist.api.model.dto.request.item.CreateItemDTO;
 import com.orderlist.api.model.dto.request.item.UpdateItemQuantity;
 import com.orderlist.api.model.dto.response.ItemDTO;
@@ -81,7 +80,7 @@ public class ItemService {
     }
 
     @Transactional
-    @PreAuthorize("@itemSecurity.isOwner(itemId, authentication.principal.user.id)")
+    @PreAuthorize("@itemSecurity.isOwner(#itemId, authentication.principal.user.id)")
     public ItemDTO increaseQuantity(Long itemId, UpdateItemQuantity dto) {
         Item item = findItemById(itemId);
         Product product = item.getProduct();
@@ -102,7 +101,7 @@ public class ItemService {
     }
 
     @Transactional
-    @PreAuthorize("@itemSecurity.isOwner(itemId, authentication.principal.user.id)")
+    @PreAuthorize("@itemSecurity.isOwner(#itemId, authentication.principal.user.id)")
     public ItemDTO decreaseQuantity(Long itemId, UpdateItemQuantity dto){
         Item item = findItemById(itemId);
         Product product = item.getProduct();
@@ -123,7 +122,7 @@ public class ItemService {
     }
 
     @Transactional
-    @PreAuthorize("@itemSecurity.isOwner(itemId, authentication.principal.user.id) && @orderSecurity.isOwner(orderId, authentication.principal.user.id)")
+    @PreAuthorize("@itemSecurity.isOwner(#itemId, authentication.principal.user.id) && @orderSecurity.isOwner(orderId, authentication.principal.user.id)")
     public void addToOrder(Long itemId, Long orderId) {
         Item item = findItemById(itemId);
         Order order = orderService.findOrderById(orderId);
@@ -141,10 +140,5 @@ public class ItemService {
         return productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found."));
     }
-
-    void checkOwnership(Item item, UUID userId){
-        if(!item.getUser().getId().equals(userId)){
-            throw new UnauthorizedException("Item does not belong to this user.");
-        }
-    }
 }
+

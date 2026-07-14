@@ -37,17 +37,15 @@ public class AddressController {
 
     @DeleteMapping("/{addressId}")
     public ResponseEntity<Void> deleteAddress(
-            @CurrentUserId UUID userId,
             @PathVariable Long addressId) {
-        addressService.deleteById(userId, addressId);
+        addressService.deleteById(addressId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{addressId}")
     public ResponseEntity<AddressDTO> findById(
-            @PathVariable UUID userId,
             @PathVariable Long addressId) {
-        return ResponseEntity.ok().body(addressService.findById(userId, addressId));
+        return ResponseEntity.ok().body(addressService.findById(addressId));
     }
 
     @GetMapping
@@ -58,9 +56,8 @@ public class AddressController {
 
     @PutMapping("/{addressId}")
     public ResponseEntity<AddressDTO> updateAddress(
-            @CurrentUserId UUID userId,
             @PathVariable Long addressId,
             @RequestBody @Valid UpdateAddressDTO dto) {
-        return ResponseEntity.ok().body(addressService.updateAddress(userId, dto, addressId));
+        return ResponseEntity.ok().body(addressService.updateAddress(dto, addressId));
     }
 }

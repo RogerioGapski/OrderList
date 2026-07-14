@@ -23,7 +23,7 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    @PostMapping("/product/{productId}")
+    @PostMapping("/{productId}")
     public ResponseEntity<ItemDTO> createItem(
             @CurrentUserId UUID userId,
             @PathVariable Long productId,

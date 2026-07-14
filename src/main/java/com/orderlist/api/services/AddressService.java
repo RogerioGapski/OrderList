@@ -1,6 +1,5 @@
 package com.orderlist.api.services;
 
-import com.orderlist.api.exceptions.customs.UnauthorizedException;
 import com.orderlist.api.model.dto.request.address.UpdateAddressDTO;
 import com.orderlist.api.model.entities.Address;
 import com.orderlist.api.model.entities.User;
@@ -11,6 +10,7 @@ import com.orderlist.api.utils.mapper.AddressMapper;
 import com.orderlist.api.repository.AddressRepository;
 import com.orderlist.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,20 +37,14 @@ public class AddressService {
     }
 
     @Transactional
-    @PreAuthorize("#userId == authentication.principal.user.id")
-    public void deleteById(UUID userId, Long addressId) {
-        User user = findUserById(userId);
-        Address address = findAddressById(addressId);
-        checkOwnership(address, user);
-        addressRepository.deleteById(addressId);
+    @PreAuthorize("@addressSecurity.isOwner(#addressId, authentication.principal.user.id)")
+    public void deleteById(Long addressId) {
+        addressRepository.deleteById(findAddressById(addressId).getId());
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
-    public AddressDTO findById(UUID userId, Long addressId) {
-        User user = findUserById(userId);
-        Address address = findAddressById(addressId);
-        checkOwnership(address, user);
-        return addressMapper.toDTO(address);
+    @PostAuthorize("hasRole('ADMIN') or returnObject.userId == authentication.principal.user.id")
+    public AddressDTO findById(Long addressId) {
+        return addressMapper.toDTO(findAddressById(addressId));
     }
 
     @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
@@ -62,18 +56,15 @@ public class AddressService {
     }
 
     @Transactional
-    @PreAuthorize("#userId == authentication.principal.user.id")
-    public AddressDTO updateAddress(UUID userId, UpdateAddressDTO dto, Long addressId) {
-        User user = findUserById(userId);
+    @PreAuthorize("@addressSecurity.isOwner(#addressId, authentication.principal.user.id)")
+    public AddressDTO updateAddress(UpdateAddressDTO dto, Long addressId) {
         Address address = findAddressById(addressId);
-        checkOwnership(address, user);
 
         address.setCity(dto.city());
         address.setStreet(dto.street());
         address.setNumber(dto.number());
 
-        addressRepository.save(address);
-        return addressMapper.toDTO(address);
+        return addressMapper.toDTO(addressRepository.save(address));
     }
 
     //Auxiliary methods
@@ -85,11 +76,5 @@ public class AddressService {
     Address findAddressById(Long addressId){
         return addressRepository.findById(addressId)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
-    }
-
-    void checkOwnership(Address address, User user) {
-        if(!address.getUser().getId().equals(user.getId())) {
-            throw new UnauthorizedException("This address does not belong to the user.");
-        }
     }
 }
