@@ -28,6 +28,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
@@ -60,6 +61,6 @@ public class AuthService {
         CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
         String token = jwtService.generateToken(user.getUser());
 
-        return new LoginDTO(token, "Bearer", jwtService.getExpiresInSeconds());
+        return new LoginDTO(user.getUser().getId(), token, "Bearer", jwtService.getExpiresInSeconds());
     }
 }
