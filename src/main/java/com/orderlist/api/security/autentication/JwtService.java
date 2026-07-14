@@ -1,4 +1,4 @@
-package com.orderlist.api.security;
+package com.orderlist.api.security.autentication;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

@@ -3,7 +3,7 @@ package com.orderlist.api.controllers;
 import com.orderlist.api.model.dto.request.address.CreateAddressDTO;
 import com.orderlist.api.model.dto.request.address.UpdateAddressDTO;
 import com.orderlist.api.model.dto.response.AddressDTO;
-import com.orderlist.api.security.CurrentUserId;
+import com.orderlist.api.security.authorization.CurrentUserId;
 import com.orderlist.api.services.AddressService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

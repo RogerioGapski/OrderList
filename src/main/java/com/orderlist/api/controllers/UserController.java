@@ -4,7 +4,7 @@ import com.orderlist.api.model.dto.request.user.UpdateEmailDTO;
 import com.orderlist.api.model.dto.request.user.UpdateNameDTO;
 import com.orderlist.api.model.dto.request.user.UpdatePasswordDTO;
 import com.orderlist.api.model.dto.response.UserDTO;
-import com.orderlist.api.security.CurrentUserId;
+import com.orderlist.api.security.authorization.CurrentUserId;
 import com.orderlist.api.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

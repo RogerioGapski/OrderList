@@ -1,7 +1,10 @@
 package com.orderlist.api.config;
 
 import com.orderlist.api.repository.UserRepository;
-import com.orderlist.api.security.*;
+import com.orderlist.api.security.autentication.AuthenticationEntry;
+import com.orderlist.api.security.autentication.JwtAuthenticationFilter;
+import com.orderlist.api.security.autentication.JwtService;
+import com.orderlist.api.security.authorization.CustomAccessDenied;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

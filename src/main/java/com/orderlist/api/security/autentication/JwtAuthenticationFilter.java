@@ -1,4 +1,4 @@
-package com.orderlist.api.security;
+package com.orderlist.api.security.autentication;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;

@@ -1,4 +1,4 @@
-package com.orderlist.api.security;
+package com.orderlist.api.security.autentication;
 
 import com.orderlist.api.model.entities.User;
 import lombok.RequiredArgsConstructor;

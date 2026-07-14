@@ -10,19 +10,18 @@ import com.orderlist.api.model.entities.Product;
 import com.orderlist.api.exceptions.customs.BadRequestException;
 import com.orderlist.api.exceptions.customs.NotFoundException;
 import com.orderlist.api.model.entities.User;
-import com.orderlist.api.repository.OrderRepository;
 import com.orderlist.api.utils.mapper.ItemMapper;
 import com.orderlist.api.repository.ItemRepository;
 import com.orderlist.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -32,7 +31,7 @@ public class ItemService {
     private final ProductRepository productRepository;
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
-    private final OrderRepository orderRepository;
+    private final OrderService orderService;
     private final UserService userService;
 
     @Transactional
@@ -60,22 +59,18 @@ public class ItemService {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
-    public void deleteById(Long itemId, UUID userId){
+    @PreAuthorize("hasRole('ADMIN') or @itemSecurity.isOwner(#itemId, authentication.principal.user.id)")
+    public void deleteById(Long itemId){
         Item item = findItemById(itemId);
-        checkOwnership(item, userId);
-
         Product product = item.getProduct();
         product.setStock(product.getStock() + item.getQuantity());
         productRepository.save(product);
-
         itemRepository.delete(item);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
-    public ItemDTO findById(Long itemId, UUID userId){
+    @PostAuthorize("hasRole('ADMIN') or returnObject.userId == authentication.principal.user.id")
+    public ItemDTO findById(Long itemId){
         Item item = findItemById(itemId);
-        checkOwnership(item, userId);
         return itemMapper.toDTO(item);
     }
 
@@ -86,10 +81,9 @@ public class ItemService {
     }
 
     @Transactional
-    @PreAuthorize("#userId == authentication.principal.user.id")
-    public ItemDTO increaseQuantity(Long itemId, UUID userId, UpdateItemQuantity dto) {
+    @PreAuthorize("@itemSecurity.isOwner(itemId, authentication.principal.user.id)")
+    public ItemDTO increaseQuantity(Long itemId, UpdateItemQuantity dto) {
         Item item = findItemById(itemId);
-        checkOwnership(item, userId);
         Product product = item.getProduct();
 
         if(product.getStock() < dto.quantity()){
@@ -108,10 +102,9 @@ public class ItemService {
     }
 
     @Transactional
-    @PreAuthorize("#userId == authentication.principal.user.id")
-    public ItemDTO decreaseQuantity(Long itemId, UUID userId, UpdateItemQuantity dto){
+    @PreAuthorize("@itemSecurity.isOwner(itemId, authentication.principal.user.id)")
+    public ItemDTO decreaseQuantity(Long itemId, UpdateItemQuantity dto){
         Item item = findItemById(itemId);
-        checkOwnership(item, userId);
         Product product = item.getProduct();
 
         if(item.getQuantity() < dto.quantity()){
@@ -130,18 +123,10 @@ public class ItemService {
     }
 
     @Transactional
-    @PreAuthorize("#userId == authentication.principal.user.id")
-    public void addToOrder(Long itemId, Long orderId, UUID userId) {
+    @PreAuthorize("@itemSecurity.isOwner(itemId, authentication.principal.user.id) && @orderSecurity.isOwner(orderId, authentication.principal.user.id)")
+    public void addToOrder(Long itemId, Long orderId) {
         Item item = findItemById(itemId);
-        checkOwnership(item, userId);
-
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order not found."));
-
-        if(!order.getUser().getId().equals(userId)){
-            throw new UnauthorizedException("Order does not belong to this user.");
-        }
-
+        Order order = orderService.findOrderById(orderId);
         item.setOrder(order);
         itemRepository.save(item);
     }

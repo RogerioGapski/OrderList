@@ -1,4 +1,4 @@
-package com.orderlist.api.security;
+package com.orderlist.api.security.authorization;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

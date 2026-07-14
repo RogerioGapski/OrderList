@@ -1,4 +1,4 @@
-package com.orderlist.api.security;
+package com.orderlist.api.security.autentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orderlist.api.exceptions.handler.ErrorResponse;
@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor

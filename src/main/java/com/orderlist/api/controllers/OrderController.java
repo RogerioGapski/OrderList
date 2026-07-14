@@ -2,7 +2,7 @@ package com.orderlist.api.controllers;
 
 import com.orderlist.api.model.dto.request.order.CreateOrderDTO;
 import com.orderlist.api.model.dto.response.OrderDTO;
-import com.orderlist.api.security.CurrentUserId;
+import com.orderlist.api.security.authorization.CurrentUserId;
 import com.orderlist.api.services.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
