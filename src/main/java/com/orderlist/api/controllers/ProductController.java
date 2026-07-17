@@ -3,6 +3,7 @@ package com.orderlist.api.controllers;
 import com.orderlist.api.model.dto.request.product.*;
 import com.orderlist.api.model.dto.response.ProductDTO;
 import com.orderlist.api.services.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "jwtAuth")
 @RequestMapping("/products")
 public class ProductController {
 

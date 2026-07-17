@@ -5,6 +5,7 @@ import com.orderlist.api.model.dto.request.address.UpdateAddressDTO;
 import com.orderlist.api.model.dto.response.AddressDTO;
 import com.orderlist.api.security.authorization.CurrentUserId;
 import com.orderlist.api.services.AddressService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "jwtAuth")
 @RequestMapping("/addresses/{userId}")
 public class AddressController {
 

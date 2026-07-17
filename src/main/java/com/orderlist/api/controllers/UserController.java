@@ -6,6 +6,7 @@ import com.orderlist.api.model.dto.request.user.UpdatePasswordDTO;
 import com.orderlist.api.model.dto.response.UserDTO;
 import com.orderlist.api.security.authorization.CurrentUserId;
 import com.orderlist.api.services.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "jwtAuth")
 @RequestMapping("/users")
 public class UserController {
 

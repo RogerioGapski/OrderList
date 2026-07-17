@@ -4,6 +4,7 @@ import com.orderlist.api.model.dto.request.category.CreateCategoryDTO;
 import com.orderlist.api.model.dto.request.category.UpdateCategoryDTO;
 import com.orderlist.api.model.dto.response.CategoryDTO;
 import com.orderlist.api.services.CategoryService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "jwtAuth")
 @RequestMapping("/categories")
 public class CategoryController {
 

@@ -2,6 +2,7 @@ package com.orderlist.api.controllers;
 
 import com.orderlist.api.model.dto.response.UserRolesDTO;
 import com.orderlist.api.services.RoleService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "jwtAuth")
 @RequestMapping("/roles")
 public class RoleController {
 

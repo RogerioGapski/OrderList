@@ -5,6 +5,7 @@ import com.orderlist.api.model.dto.request.item.UpdateItemQuantity;
 import com.orderlist.api.model.dto.response.ItemDTO;
 import com.orderlist.api.security.authorization.CurrentUserId;
 import com.orderlist.api.services.ItemService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "jwtAuth")
 @RequestMapping("/users/items")
 public class ItemController {
 
