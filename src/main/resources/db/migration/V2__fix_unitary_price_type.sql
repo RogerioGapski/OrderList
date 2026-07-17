@@ -1,0 +1,1 @@
+ALTER TABLE items MODIFY COLUMN unitary_price DECIMAL(38,2) NOT NULL;
