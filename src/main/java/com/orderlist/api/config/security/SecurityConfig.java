@@ -1,4 +1,4 @@
-package com.orderlist.api.config;
+package com.orderlist.api.config.security;
 
 import com.orderlist.api.repository.UserRepository;
 import com.orderlist.api.security.autentication.AuthenticationEntry;
@@ -40,8 +40,8 @@ public class SecurityConfig {
                         .authenticationEntryPoint(entryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(
+                                "/auth/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui/index.html",
                                 "/v3/api-docs/**"
