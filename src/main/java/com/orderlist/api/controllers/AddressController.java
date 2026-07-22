@@ -7,7 +7,6 @@ import com.orderlist.api.model.dto.response.AddressDTO;
 import com.orderlist.api.security.authorization.CurrentUserId;
 import com.orderlist.api.services.AddressService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

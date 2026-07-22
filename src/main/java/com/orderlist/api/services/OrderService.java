@@ -9,6 +9,7 @@ import com.orderlist.api.exceptions.customs.BadRequestException;
 import com.orderlist.api.exceptions.customs.NotFoundException;
 import com.orderlist.api.model.entities.User;
 import com.orderlist.api.model.enums.OrderStatus;
+import com.orderlist.api.model.enums.Payments;
 import com.orderlist.api.utils.mapper.ItemMapper;
 import com.orderlist.api.utils.mapper.OrderMapper;
 import com.orderlist.api.repository.ItemRepository;
@@ -46,11 +47,13 @@ public class OrderService {
                 .map(Item::getUnitaryPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        Order order = orderMapper.toEntity(dto);
+        String paymentType = dto.paymentType().toString().toUpperCase();
+        Order order = new Order();
         order.setUser(user);
         order.setStatus(OrderStatus.PENDING);
         order.setTotal(total);
         order.setItems(pendingItems);
+        order.setPaymentType(Payments.valueOf(paymentType));
         orderRepository.save(order);
 
         pendingItems.forEach(item -> item.setOrder(order));
