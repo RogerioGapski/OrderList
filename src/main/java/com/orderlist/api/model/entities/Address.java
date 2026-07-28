@@ -13,13 +13,13 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "addresses")
+@Table(name = "addresses_tb")
 public class Address implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address_id", nullable = false, unique = true, updatable = false)
+    @Column(nullable = false, unique = true)
     private Long id;
 
     @Column(nullable = false)
@@ -29,10 +29,6 @@ public class Address implements Serializable {
     private String street;
 
     @Column(nullable = false)
-    @Size(max = 8, message = "The house number must have at most 8 characters.")
-    @Pattern(
-            regexp = "^[0-9]+$", message = "The house number must contain only digits."
-    )
     private String number;
 
     @ManyToOne

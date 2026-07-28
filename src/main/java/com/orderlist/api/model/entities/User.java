@@ -15,16 +15,16 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "users_tb")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "user_id", nullable = false, unique = true, updatable = false)
+    @Column(nullable = false, unique = true, updatable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @Column(name = "user_name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @Column(unique = true, nullable = false)

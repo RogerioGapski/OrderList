@@ -17,17 +17,17 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "orders")
+@Table(name = "orders_tb")
 public class Order implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id", nullable = false, unique = true, updatable = false)
+    @Column(nullable = false, unique = true, updatable = false)
     private Long id;
 
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
+    @Column(name = "create_date", nullable = false, updatable = false)
     private Instant date;
 
     @Enumerated(EnumType.STRING)
@@ -38,7 +38,7 @@ public class Order implements Serializable {
     private BigDecimal total;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "payment_type", nullable = false)
     private Payments paymentType;
 
     @ManyToOne

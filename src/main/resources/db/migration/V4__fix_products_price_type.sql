@@ -1,1 +1,0 @@
-ALTER TABLE products MODIFY COLUMN product_price DECIMAL(38,2) NOT NULL;
