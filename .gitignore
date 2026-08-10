@@ -31,8 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
-
 .idea/
-src/main/resources/app.key
-src/main/resources/app.pub
+secret/
 .env
