@@ -10,6 +10,7 @@ COPY src ./src
 RUN ./mvnw clean package -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine
+RUN apk add --no-cache curl
 WORKDIR /app
 RUN addgroup -S spring && adduser -S spring -G spring
 COPY --from=build /app/target/*.jar app.jar

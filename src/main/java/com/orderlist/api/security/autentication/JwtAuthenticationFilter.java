@@ -76,7 +76,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || path.startsWith("/swagger-resources")
                 || path.startsWith("/orderlist.docs")
                 || path.startsWith("/auth/register")
-                || path.startsWith("/auth/login");
+                || path.startsWith("/auth/login")
+                || path.startsWith("/actuator/health");
     }
 
     private String extractToken(HttpServletRequest request) {

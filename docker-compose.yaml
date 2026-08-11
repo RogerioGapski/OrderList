@@ -36,6 +36,11 @@ services:
       - SPRING_DATASOURCE_URL=${DB_URL}
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - PRIVATE_KEY_PATH=${PRIVATE_KEY_PATH}
+      - PUBLIC_KEY_PATH=${PUBLIC_KEY_PATH}
+    volumes:
+      - ./secret/app.key:/app/secret/app.key:ro
+      - ./secret/app.pub:/app/secret/app.pub:ro
     container_name: order-list-app
     restart: always
 
