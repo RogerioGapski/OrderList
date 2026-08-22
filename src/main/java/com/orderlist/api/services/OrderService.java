@@ -7,9 +7,11 @@ import com.orderlist.api.model.entities.Order;
 import com.orderlist.api.model.dto.response.OrderDTO;
 import com.orderlist.api.exceptions.customs.BadRequestException;
 import com.orderlist.api.exceptions.customs.NotFoundException;
+import com.orderlist.api.model.entities.Product;
 import com.orderlist.api.model.entities.User;
 import com.orderlist.api.model.enums.OrderStatus;
 import com.orderlist.api.model.enums.Payments;
+import com.orderlist.api.repository.ProductRepository;
 import com.orderlist.api.utils.mapper.ItemMapper;
 import com.orderlist.api.utils.mapper.OrderMapper;
 import com.orderlist.api.repository.ItemRepository;
@@ -31,6 +33,7 @@ public class OrderService {
     private final ItemRepository itemRepository;
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     @PreAuthorize("#userId == authentication.principal.user.id")
@@ -94,15 +97,28 @@ public class OrderService {
         Order order = findOrderById(orderId);
         checkOwnership(order, userId);
 
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new BadRequestException("Items can only be removed while the order is PENDING.");
+        }
+
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Item not found."));
 
-        if(item.getOrder() == null || !item.getOrder().getId().equals(orderId)) {
-            throw new BadRequestException("Items does not belong to this Order");
+        if (item.getOrder() == null || !item.getOrder().getId().equals(orderId)) {
+            throw new BadRequestException("Item does not belong to this Order");
         }
 
+        Product product = item.getProduct();
+        product.setStock(product.getStock() + item.getQuantity());
+        productRepository.save(product);
+
+        order.getItems().remove(item);
         item.setOrder(null);
-        itemRepository.save(item);
+        itemRepository.delete(item);
+
+        order.setTotal(order.getItems().stream()
+                .map(Item::getUnitaryPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
     //Auxiliary methods
