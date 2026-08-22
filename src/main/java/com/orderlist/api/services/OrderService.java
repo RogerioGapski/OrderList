@@ -66,10 +66,17 @@ public class OrderService {
     }
 
     @Transactional
-    @PreAuthorize("#userId == authentication.principal.user.id")
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.user.id")
     public void deleteById(Long orderId, UUID userId) {
         Order order = findOrderById(orderId);
         checkOwnership(order, userId);
+
+        order.getItems().forEach(item -> {
+            Product product = item.getProduct();
+            product.setStock(product.getStock() + item.getQuantity());
+            productRepository.save(product);
+        });
+
         orderRepository.delete(order);
     }
 
