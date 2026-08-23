@@ -64,7 +64,7 @@ public class ItemController {
 
     @Operation(summary = "Finds all user items by user ID")
     @ApiProtectedReadResponses
-    @GetMapping("/{userId}")
+    @GetMapping("/all/{userId}")
     public ResponseEntity<Page<ItemDTO>> findAll(@PathVariable UUID userId, Pageable pageable) {
         return ResponseEntity.ok(itemService.findAll(userId, pageable));
     }
