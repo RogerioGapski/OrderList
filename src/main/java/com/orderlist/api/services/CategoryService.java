@@ -1,12 +1,14 @@
 package com.orderlist.api.services;
 
 import com.orderlist.api.exceptions.customs.AlreadyExistsException;
+import com.orderlist.api.exceptions.customs.ConflictException;
 import com.orderlist.api.exceptions.customs.NotFoundException;
 import com.orderlist.api.model.dto.request.category.CreateCategoryDTO;
 import com.orderlist.api.model.dto.request.category.UpdateCategoryDTO;
 import com.orderlist.api.model.dto.response.CategoryDTO;
 import com.orderlist.api.model.entities.Category;
 import com.orderlist.api.repository.CategoryRepository;
+import com.orderlist.api.repository.ProductRepository;
 import com.orderlist.api.utils.mapper.CategoryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,7 @@ public class CategoryService {
 
     private final CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
@@ -39,6 +42,9 @@ public class CategoryService {
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteCategory(Long id){
         findCategoryById(id);
+        if(productRepository.existsByCategoryId(id)){
+            throw new ConflictException("Category has products attached and cannot be deleted.");
+        }
         categoryRepository.deleteById(id);
     }
 
