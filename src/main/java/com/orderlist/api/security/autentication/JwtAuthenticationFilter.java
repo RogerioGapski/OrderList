@@ -65,6 +65,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     } catch (CustomAuthenticationException e) {
         entryPoint.commence(
                 request, response, e);
+    } catch (NotFoundException e) {
+        throw new NotFoundException("User not found");
     }
 }
 
