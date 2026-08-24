@@ -1,10 +1,12 @@
 package com.orderlist.api.services;
 
+import com.orderlist.api.exceptions.customs.ConflictException;
 import com.orderlist.api.model.dto.request.product.*;
 import com.orderlist.api.model.entities.Category;
 import com.orderlist.api.model.entities.Product;
 import com.orderlist.api.model.dto.response.ProductDTO;
 import com.orderlist.api.exceptions.customs.NotFoundException;
+import com.orderlist.api.repository.ItemRepository;
 import com.orderlist.api.utils.mapper.ProductMapper;
 import com.orderlist.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final CategoryService categoryService;
+    private final ItemRepository itemRepository;
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
@@ -36,6 +39,9 @@ public class ProductService {
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteById(Long id) {
         Product product = findProductById(id);
+        if(itemRepository.existsById(id)) {
+            throw new ConflictException("Product has items attached and cannot be deleted.");
+        }
         productRepository.delete(product);
     }
 

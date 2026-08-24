@@ -16,4 +16,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findAllByUserId(UUID userId, Pageable pageable);
     @Query("SELECT i FROM Item i WHERE i.user.id = :userId AND i.order IS NULL")
     List<Item> findAllByUserIdNoPageable(@Param("userId") UUID userId);
+    boolean existsByProductId(Long productId);
 }
