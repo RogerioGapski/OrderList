@@ -1,6 +1,6 @@
 package com.orderlist.api.services;
 
-import com.orderlist.api.exceptions.customs.UnauthorizedException;
+import com.orderlist.api.exceptions.customs.ForbiddenException;
 import com.orderlist.api.model.dto.request.order.CreateOrderDTO;
 import com.orderlist.api.model.entities.Item;
 import com.orderlist.api.model.entities.Order;
@@ -12,7 +12,6 @@ import com.orderlist.api.model.entities.User;
 import com.orderlist.api.model.enums.OrderStatus;
 import com.orderlist.api.model.enums.Payments;
 import com.orderlist.api.repository.ProductRepository;
-import com.orderlist.api.utils.mapper.ItemMapper;
 import com.orderlist.api.utils.mapper.OrderMapper;
 import com.orderlist.api.repository.ItemRepository;
 import com.orderlist.api.repository.OrderRepository;
@@ -136,7 +135,7 @@ public class OrderService {
 
     void checkOwnership(Order order, UUID userId){
         if(!order.getUser().getId().equals(userId)){
-            throw new UnauthorizedException("Order does not belong to this user.");
+            throw new ForbiddenException("Order does not belong to this user.");
         }
     }
 }
