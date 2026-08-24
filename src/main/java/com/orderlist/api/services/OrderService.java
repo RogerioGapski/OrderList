@@ -38,8 +38,7 @@ public class OrderService {
     @PreAuthorize("#userId == authentication.principal.user.id")
     public OrderDTO createOrder(CreateOrderDTO dto, UUID userId) {
         User user = userService.findUserById(userId);
-        List<Item> pendingItems = itemRepository.findAllByUserIdNoPageable(userId).stream()
-                .toList();
+        List<Item> pendingItems = itemRepository.findAllByUserIdNoPageable(userId);
 
         if(pendingItems.isEmpty()){
             throw new BadRequestException("No items available to create and order.");
