@@ -33,9 +33,9 @@ public class CategoryService {
         if(categoryRepository.existsByName(dto.name())){
             throw new AlreadyExistsException("Category already exists.");
         }
-        Category category =  categoryMapper.toEntity(dto);
-        categoryRepository.save(category);
-        return categoryMapper.toDTO(category);
+        Category category = categoryMapper.toEntity(dto);
+        Category categorySaved = categoryRepository.save(category);
+        return categoryMapper.toDTO(categorySaved);
     }
 
     @Transactional
@@ -67,8 +67,8 @@ public class CategoryService {
             throw new AlreadyExistsException("Category name already exists.");
         }
         category.setName(dto.name());
-        categoryRepository.save(category);
-        return categoryMapper.toDTO(category);
+        Category savedCategory = categoryRepository.save(category);
+        return categoryMapper.toDTO(savedCategory);
     }
 
     //Auxiliary method
