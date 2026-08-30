@@ -40,7 +40,7 @@ public class ProductService {
     public void deleteById(Long id) {
         Product product = findProductById(id);
         if(itemRepository.existsById(id)) {
-            throw new ConflictException("Product has items attached and cannot be deleted.");
+            throw new ConflictException("Product has items attached and cannot be deleted");
         }
         productRepository.delete(product);
     }
@@ -100,6 +100,6 @@ public class ProductService {
     //Auxiliary method
     Product findProductById(Long id){
         return productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product not found."));
+                .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 }

@@ -39,9 +39,15 @@ public class OrderService {
     public OrderDTO createOrder(CreateOrderDTO dto, UUID userId) {
         User user = userService.findUserById(userId);
         List<Item> pendingItems = itemRepository.findAllByUserIdNoPageable(userId);
+        boolean somethingHaveOrder = pendingItems.stream()
+                .anyMatch(item -> item.getOrder() != null);
+
+        if(somethingHaveOrder){
+            throw new BadRequestException("An item is already in an order");
+        }
 
         if(pendingItems.isEmpty()){
-            throw new BadRequestException("No items available to create and order.");
+            throw new BadRequestException("No items available to create and order");
         }
 
         BigDecimal total = pendingItems.stream()
@@ -103,11 +109,11 @@ public class OrderService {
         checkOwnership(order, userId);
 
         if (order.getStatus() != OrderStatus.PENDING) {
-            throw new BadRequestException("Items can only be removed while the order is PENDING.");
+            throw new BadRequestException("Items can only be removed while the order is PENDING");
         }
 
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Item not found."));
+                .orElseThrow(() -> new NotFoundException("Item not found"));
 
         if (item.getOrder() == null || !item.getOrder().getId().equals(orderId)) {
             throw new BadRequestException("Item does not belong to this Order");
@@ -134,7 +140,7 @@ public class OrderService {
 
     void checkOwnership(Order order, UUID userId){
         if(!order.getUser().getId().equals(userId)){
-            throw new ForbiddenException("Order does not belong to this user.");
+            throw new ForbiddenException("Order does not belong to this user");
         }
     }
 }

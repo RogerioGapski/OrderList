@@ -38,7 +38,7 @@ public class ItemService {
     public ItemDTO createItem(CreateItemDTO dto, Long productId, UUID userId) {
         Product product = findProductById(productId);
         if(product.getStock() < dto.quantity()){
-            throw new BadRequestException("Insufficient stock for this product.");
+            throw new BadRequestException("Insufficient stock for this product");
         }
 
         User user = userService.findUserById(userId);
@@ -86,7 +86,7 @@ public class ItemService {
         Product product = item.getProduct();
 
         if(product.getStock() < dto.quantity()){
-            throw new BadRequestException("Insufficient stock for this product.");
+            throw new BadRequestException("Insufficient stock for this product");
         }
 
         product.setStock(product.getStock() - dto.quantity());
@@ -107,7 +107,7 @@ public class ItemService {
         Product product = item.getProduct();
 
         if(item.getQuantity() < dto.quantity()){
-            throw new BadRequestException("Cannot decrease more than the current item quantity.");
+            throw new BadRequestException("Cannot decrease more than the current item quantity");
         }
 
         product.setStock(product.getStock() + dto.quantity());
@@ -133,12 +133,12 @@ public class ItemService {
     //Auxiliary methods
     Item findItemById(Long id){
         return itemRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Item not found."));
+                .orElseThrow(() -> new NotFoundException("Item not found"));
     }
 
     Product findProductById(Long id){
         return productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product not found."));
+                .orElseThrow(() -> new NotFoundException("Product not found"));
     }
 }
 

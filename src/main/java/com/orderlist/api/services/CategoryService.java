@@ -31,7 +31,7 @@ public class CategoryService {
     @PreAuthorize("hasRole('ADMIN')")
     public CategoryDTO createCategory(CreateCategoryDTO dto){
         if(categoryRepository.existsByName(dto.name())){
-            throw new AlreadyExistsException("Category already exists.");
+            throw new AlreadyExistsException("Category already exists");
         }
         Category category = categoryMapper.toEntity(dto);
         Category categorySaved = categoryRepository.save(category);
@@ -43,7 +43,7 @@ public class CategoryService {
     public void deleteCategory(Long id){
         findCategoryById(id);
         if(productRepository.existsByCategoryId(id)){
-            throw new ConflictException("Category has products attached and cannot be deleted.");
+            throw new ConflictException("Category has products attached and cannot be deleted");
         }
         categoryRepository.deleteById(id);
     }
@@ -64,7 +64,7 @@ public class CategoryService {
     public CategoryDTO updateCategory(Long id, UpdateCategoryDTO dto){
         Category category = findCategoryById(id);
         if(categoryRepository.existsByName(dto.name())){
-            throw new AlreadyExistsException("Category name already exists.");
+            throw new AlreadyExistsException("Category name already exists");
         }
         category.setName(dto.name());
         Category savedCategory = categoryRepository.save(category);
@@ -74,6 +74,6 @@ public class CategoryService {
     //Auxiliary method
     Category findCategoryById(Long id){
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found."));
+                .orElseThrow(() -> new NotFoundException("Category not found"));
     }
 }

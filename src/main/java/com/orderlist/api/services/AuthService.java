@@ -36,7 +36,7 @@ public class AuthService {
     @Transactional
     public RegisterDTO registerUser(RegisterRequest dto) {
         if(userRepository.existsByEmail(dto.email())){
-            throw new AlreadyExistsException("Email already in use.");
+            throw new AlreadyExistsException("Email already in use");
         }
 
         Role defaultPermission = roleRepository.findByName(Roles.ROLE_USER)

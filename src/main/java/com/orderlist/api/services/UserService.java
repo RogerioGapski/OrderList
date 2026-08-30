@@ -55,7 +55,7 @@ public class UserService {
     @PreAuthorize("#id == authentication.principal.user.id")
     public UserDTO changeEmail(UUID id, UpdateEmailDTO newEmail) {
         if(userRepository.existsByEmail(newEmail.email())){
-            throw new AlreadyExistsException("Email already in use.");
+            throw new AlreadyExistsException("Email already in use");
         }
         User user = findUserById(id);
         user.setEmail(newEmail.email());
