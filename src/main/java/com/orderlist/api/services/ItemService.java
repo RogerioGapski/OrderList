@@ -85,6 +85,10 @@ public class ItemService {
         Item item = findItemById(itemId);
         Product product = item.getProduct();
 
+        if(item.getOrder() == null){
+            throw new BadRequestException("The item is not associated with any order");
+        }
+
         if(product.getStock() < dto.quantity()){
             throw new BadRequestException("Insufficient stock for this product");
         }
@@ -104,6 +108,11 @@ public class ItemService {
     @PreAuthorize("@itemSecurity.isOwner(#itemId, authentication.principal.user.id)")
     public ItemDTO decreaseQuantity(Long itemId, UpdateItemQuantity dto){
         Item item = findItemById(itemId);
+
+        if(item.getOrder() == null){
+            throw new BadRequestException("The item is not associated with any order");
+        }
+
         Product product = item.getProduct();
 
         if(item.getQuantity() <= dto.quantity()){
