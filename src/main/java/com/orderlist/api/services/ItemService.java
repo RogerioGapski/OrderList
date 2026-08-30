@@ -106,7 +106,7 @@ public class ItemService {
         Item item = findItemById(itemId);
         Product product = item.getProduct();
 
-        if(item.getQuantity() < dto.quantity()){
+        if(item.getQuantity() <= dto.quantity()){
             throw new BadRequestException("Cannot decrease more than the current item quantity");
         }
 
