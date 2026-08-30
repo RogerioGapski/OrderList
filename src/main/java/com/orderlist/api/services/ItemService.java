@@ -1,5 +1,6 @@
 package com.orderlist.api.services;
 
+import com.orderlist.api.exceptions.customs.ConflictException;
 import com.orderlist.api.model.dto.request.item.CreateItemDTO;
 import com.orderlist.api.model.dto.request.item.UpdateItemQuantity;
 import com.orderlist.api.model.dto.response.ItemDTO;
@@ -15,6 +16,7 @@ import com.orderlist.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -46,14 +48,16 @@ public class ItemService {
         Item item = itemMapper.toEntity(dto);
         item.setProduct(product);
         item.setUser(user);
-        item.setUnitaryPrice(
-                product.getPrice().multiply(BigDecimal.valueOf(dto.quantity()))
-        );
-
-        product.setStock(product.getStock() - dto.quantity());
-        productRepository.save(product);
-
+        item.setUnitaryPrice(product.getPrice().multiply(BigDecimal.valueOf(dto.quantity())));
         itemRepository.save(item);
+
+        try {
+            product.setStock(product.getStock() - dto.quantity());
+            productRepository.save(product);
+        } catch (ObjectOptimisticLockingFailureException e){
+            throw new ConflictException("Operation conflict. Please try again");
+        }
+
         return itemMapper.toDTO(item);
     }
 
@@ -62,8 +66,14 @@ public class ItemService {
     public void deleteById(Long itemId){
         Item item = findItemById(itemId);
         Product product = item.getProduct();
-        product.setStock(product.getStock() + item.getQuantity());
-        productRepository.save(product);
+
+        try {
+            product.setStock(product.getStock() + item.getQuantity());
+            productRepository.save(product);
+        } catch (ObjectOptimisticLockingFailureException e){
+            throw new ConflictException("Operation conflict. Please try again");
+        }
+
         itemRepository.delete(item);
     }
 
@@ -93,13 +103,15 @@ public class ItemService {
             throw new BadRequestException("Insufficient stock for this product");
         }
 
-        product.setStock(product.getStock() - dto.quantity());
-        item.setQuantity(item.getQuantity() + dto.quantity());
-        item.setUnitaryPrice(
-                product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
-        );
+        try {
+            product.setStock(product.getStock() - dto.quantity());
+            productRepository.save(product);
+        } catch (ObjectOptimisticLockingFailureException e){
+            throw new ConflictException("Operation conflict. Please try again");
+        }
 
-        productRepository.save(product);
+        item.setQuantity(item.getQuantity() + dto.quantity());
+        item.setUnitaryPrice(product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
         itemRepository.save(item);
         return itemMapper.toDTO(item);
     }
@@ -119,13 +131,15 @@ public class ItemService {
             throw new BadRequestException("Cannot decrease more than the current item quantity");
         }
 
-        product.setStock(product.getStock() + dto.quantity());
-        item.setQuantity(item.getQuantity() - dto.quantity());
-        item.setUnitaryPrice(
-                product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
-        );
+        try {
+            product.setStock(product.getStock() + dto.quantity());
+            productRepository.save(product);
+        } catch (ObjectOptimisticLockingFailureException e){
+            throw new ConflictException("Operation conflict. Please try again");
+        }
 
-        productRepository.save(product);
+        item.setQuantity(item.getQuantity() - dto.quantity());
+        item.setUnitaryPrice(product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
         itemRepository.save(item);
         return itemMapper.toDTO(item);
     }

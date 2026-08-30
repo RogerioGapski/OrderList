@@ -1,5 +1,6 @@
 package com.orderlist.api.services;
 
+import com.orderlist.api.exceptions.customs.ConflictException;
 import com.orderlist.api.exceptions.customs.ForbiddenException;
 import com.orderlist.api.model.dto.request.order.CreateOrderDTO;
 import com.orderlist.api.model.entities.Item;
@@ -16,6 +17,7 @@ import com.orderlist.api.utils.mapper.OrderMapper;
 import com.orderlist.api.repository.ItemRepository;
 import com.orderlist.api.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,9 +78,13 @@ public class OrderService {
         checkOwnership(order, userId);
 
         order.getItems().forEach(item -> {
-            Product product = item.getProduct();
-            product.setStock(product.getStock() + item.getQuantity());
-            productRepository.save(product);
+            try {
+                Product product = item.getProduct();
+                product.setStock(product.getStock() + item.getQuantity());
+                productRepository.save(product);
+            } catch (ObjectOptimisticLockingFailureException e){
+                throw new ConflictException("Operation conflict. Please try again");
+                }
         });
 
         orderRepository.delete(order);
@@ -119,12 +125,15 @@ public class OrderService {
             throw new BadRequestException("Item does not belong to this Order");
         }
 
-        Product product = item.getProduct();
-        product.setStock(product.getStock() + item.getQuantity());
-        productRepository.save(product);
+        try {
+            Product product = item.getProduct();
+            product.setStock(product.getStock() + item.getQuantity());
+            productRepository.save(product);
+        } catch (ObjectOptimisticLockingFailureException e){
+            throw new ConflictException("Operation conflict. Please try again");
+        }
 
         order.getItems().remove(item);
-        item.setOrder(null);
         itemRepository.delete(item);
 
         order.setTotal(order.getItems().stream()

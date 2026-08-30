@@ -30,6 +30,9 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private Integer stock;
 
+    @Version
+    private Long version;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
