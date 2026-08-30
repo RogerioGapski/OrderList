@@ -125,6 +125,11 @@ public class ItemService {
     @PreAuthorize("@itemSecurity.isOwner(#itemId, authentication.principal.user.id) && @orderSecurity.isOwner(orderId, authentication.principal.user.id)")
     public void addToOrder(Long itemId, Long orderId) {
         Item item = findItemById(itemId);
+
+        if(item.getOrder() != null){
+            throw new BadRequestException("The item is already in an order");
+        }
+
         Order order = orderService.findOrderById(orderId);
         item.setOrder(order);
         itemRepository.save(item);
