@@ -1,6 +1,7 @@
 package com.orderlist.api.controllers;
 
 import com.orderlist.api.config.swagger.*;
+import com.orderlist.api.model.dto.request.user.OldPasswordDTO;
 import com.orderlist.api.model.dto.request.user.UpdateEmailDTO;
 import com.orderlist.api.model.dto.request.user.UpdateNameDTO;
 import com.orderlist.api.model.dto.request.user.UpdatePasswordDTO;
@@ -71,8 +72,9 @@ public class UserController {
     @PatchMapping("/password/change")
     public ResponseEntity<Void> updatePassword(
             @CurrentUserId UUID id,
-            @RequestBody @Valid UpdatePasswordDTO dto) {
-        userService.changePassword(id, dto);
+            @RequestBody @Valid OldPasswordDTO oldPassword,
+            @RequestBody @Valid UpdatePasswordDTO newPassword) {
+        userService.changePassword(id, oldPassword, newPassword);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,6 +1,8 @@
 package com.orderlist.api.services;
 
 import com.orderlist.api.exceptions.customs.AlreadyExistsException;
+import com.orderlist.api.exceptions.customs.InvalidCredentialsException;
+import com.orderlist.api.model.dto.request.user.OldPasswordDTO;
 import com.orderlist.api.model.dto.request.user.UpdateEmailDTO;
 import com.orderlist.api.model.dto.request.user.UpdateNameDTO;
 import com.orderlist.api.model.dto.request.user.UpdatePasswordDTO;
@@ -65,10 +67,16 @@ public class UserService {
 
     @Transactional
     @PreAuthorize("#id == authentication.principal.user.id")
-    public void changePassword(UUID id, UpdatePasswordDTO newPassword) {
+    public void changePassword(UUID id, OldPasswordDTO oldPassword, UpdatePasswordDTO newPassword) {
         User user = findUserById(id);
-        user.setPassword(passwordEncoder.encode(newPassword.password()));
-        userRepository.save(user);
+        boolean passwordCorrect = passwordEncoder.matches(oldPassword.password(), user.getPassword());
+
+        if(passwordCorrect){
+            user.setPassword(passwordEncoder.encode(newPassword.password()));
+            userRepository.save(user);
+        } else {
+            throw new InvalidCredentialsException("Invalid current password");
+        }
     }
 
     //Auxiliary method
