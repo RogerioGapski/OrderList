@@ -1,5 +1,6 @@
 package com.orderlist.api.services;
 
+import com.orderlist.api.exceptions.customs.ConflictException;
 import com.orderlist.api.exceptions.customs.NotFoundException;
 import com.orderlist.api.model.dto.request.address.CreateAddressDTO;
 import com.orderlist.api.model.dto.request.address.UpdateAddressDTO;
@@ -104,6 +105,30 @@ class AddressServiceTest {
 
             assertThat(e.getMessage())
                     .isEqualTo("User not found");
+        }
+
+        @Test
+        @DisplayName("Should throw exception if the user has five or more addresses")
+        void shouldThrowExceptionIfTheUserHasFiveOrMoreAddresses() {
+            var dto = new CreateAddressDTO("New York", "Sweet Town", "1001");
+            var userId = UUID.randomUUID();
+            var user = new User();
+            user.setId(userId);
+            user.setAddresses(List.of(new Address(), new Address(), new Address(), new Address(), new Address()));
+
+            when(userRepository.findById(userId))
+                    .thenReturn(Optional.of(user));
+
+            ConflictException e = assertThrows(
+                    ConflictException.class,
+                    () -> addressService.createAddress(dto, userId)
+            );
+
+            verify(userRepository).findById(userId);
+            verify(addressRepository, never()).save(any(Address.class));
+
+            assertThat(e.getMessage())
+                    .isEqualTo("Address limit reached");
         }
     }
 
