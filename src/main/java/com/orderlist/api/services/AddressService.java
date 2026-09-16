@@ -1,5 +1,6 @@
 package com.orderlist.api.services;
 
+import com.orderlist.api.exceptions.customs.ConflictException;
 import com.orderlist.api.model.dto.request.address.UpdateAddressDTO;
 import com.orderlist.api.model.entities.Address;
 import com.orderlist.api.model.entities.User;
@@ -30,6 +31,11 @@ public class AddressService {
     @PreAuthorize("#userId == authentication.principal.user.id")
     public AddressDTO createAddress(CreateAddressDTO dto, UUID userId) {
         User user = findUserById(userId);
+
+        if(user.getAddresses().size() >= 5) {
+            throw new ConflictException("Address limit reached");
+        }
+
         Address address = addressMapper.toEntity(dto);
         address.setUser(user);
         addressRepository.save(address);
