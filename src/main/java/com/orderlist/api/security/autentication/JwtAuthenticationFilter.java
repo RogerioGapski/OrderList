@@ -20,7 +20,6 @@ import com.orderlist.api.exceptions.customs.CustomAuthenticationException.AuthEr
 import java.io.IOException;
 import java.util.UUID;
 
-@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

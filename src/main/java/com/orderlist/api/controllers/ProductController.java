@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,8 @@ public class ProductController {
     @Operation(summary = "Deletes a product by ID")
     @ApiProtectedDeleteResponses
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(
+            @PathVariable Long id) {
         productService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -51,14 +53,16 @@ public class ProductController {
     @Operation(summary = "Finds a product by ID")
     @ApiProtectedReadResponses
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<ProductDTO> findById(
+            @PathVariable Long id) {
         return ResponseEntity.ok(productService.findById(id));
     }
 
     @Operation(summary = "Finds a product by name")
     @ApiProtectedReadResponses
     @GetMapping("/name/{name}")
-    public ResponseEntity<ProductDTO> findByName(@PathVariable String name) {
+    public ResponseEntity<ProductDTO> findByName(
+            @PathVariable String name) {
         return ResponseEntity.ok(productService.findByName(name));
     }
 
@@ -66,7 +70,8 @@ public class ProductController {
     @ApiProtectedReadResponses
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<Page<ProductDTO>> findByCategory(
-            @PathVariable String categoryName, Pageable pageable) {
+            @PathVariable String categoryName,
+            Pageable pageable) {
         return ResponseEntity.ok(productService.findByCategory(categoryName, pageable));
     }
 
